@@ -1,4 +1,16 @@
 import { useState } from "react";
+import { Loader2 } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export default function TrialInputForm({ onSubmit, loading, error }) {
   const [input, setInput] = useState("");
@@ -9,39 +21,53 @@ export default function TrialInputForm({ onSubmit, loading, error }) {
   }
 
   return (
-    <form className="trial-form" onSubmit={handleSubmit}>
-      <label className="trial-form__label" htmlFor="trial-input">
-        NCT ID or ClinicalTrials.gov URL
-      </label>
-      <div className="trial-form__row">
-        <input
-          id="trial-input"
-          className="trial-form__input"
-          type="text"
-          value={input}
-          onChange={(event) => setInput(event.target.value)}
-          placeholder="NCT05123456 or https://clinicaltrials.gov/study/NCT05123456"
-          disabled={loading}
-          autoComplete="off"
-          spellCheck={false}
-        />
-        <button
-          className="trial-form__button"
-          type="submit"
-          disabled={loading || !input.trim()}
-        >
-          {loading ? "Fetching…" : "Fetch trial"}
-        </button>
-      </div>
-      <p className="trial-form__hint">
-        Paste an NCT ID or full CT.gov study URL. Eligibility criteria will be
-        extracted automatically.
-      </p>
-      {error && (
-        <p className="trial-form__error" role="alert">
-          {error}
-        </p>
-      )}
-    </form>
+    <Card>
+      <CardHeader>
+        <CardTitle>Look up a trial</CardTitle>
+        <CardDescription>
+          Paste an NCT ID or full CT.gov study URL. Eligibility criteria will be
+          extracted automatically.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <form className="space-y-4" onSubmit={handleSubmit}>
+          <div className="space-y-2">
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <Input
+                id="trial-input"
+                type="text"
+                value={input}
+                onChange={(event) => setInput(event.target.value)}
+                placeholder="NCT05123456 or https://clinicaltrials.gov/study/NCT05123456"
+                disabled={loading}
+                autoComplete="off"
+                spellCheck={false}
+              />
+              <Button
+                type="submit"
+                size="lg"
+                disabled={loading || !input.trim()}
+                className="shrink-0"
+              >
+                {loading ? (
+                  <>
+                    <Loader2 className="animate-spin" />
+                    Fetching…
+                  </>
+                ) : (
+                  "Fetch trial"
+                )}
+              </Button>
+            </div>
+          </div>
+
+          {error && (
+            <Alert variant="destructive">
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
+        </form>
+      </CardContent>
+    </Card>
   );
 }
