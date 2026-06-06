@@ -1,0 +1,112 @@
+PATIENT_ID,BIRTHDATE,DEATHDATE,PREFIX,FIRST,LAST,FULL_NAME,MARITAL,RACE,ETHNICITY,GENDER,CITY,STATE,ZIP,HEALTHCARE_EXPENSES,HEALTHCARE_COVERAGE,INCOME,AGE,IS_DECEASED
+69af9fdb-6026-cf15-8110-60645be1a286,1/15/51,,Mrs.,Sasha806,Stamm704,Sasha806 Stamm704,M,white,nonhispanic,F,Uxbridge,Massachusetts,0,781858.42,182267.18,53813,75,FALSE
+e2b7d298-e3e5-8e5a-804c-a8342fdeb164,10/27/57,,Mrs.,Shawnta32,Hintz995,Shawnta32 Hintz995,D,white,nonhispanic,F,Danvers,Massachusetts,1937,617728.28,860065.14,109027,68,FALSE
+ca4f2fef-0fea-5cdb-314c-9d6689cfabb0,12/4/05,,Ms.,Haley279,Ondricka197,Haley279 Ondricka197,,white,hispanic,F,Fitchburg,Massachusetts,1420,11148.62,726893.5,125882,20,FALSE
+36a8268b-0e08-f9d6-6999-eca371aab83c,5/14/78,,Mrs.,Jung484,Stehr398,Jung484 Stehr398,M,asian,nonhispanic,F,Somerville,Massachusetts,2144,739328.17,135123.9,65255,48,FALSE
+7bfad7bf-fbc0-2a68-6c37-b9351c1ec651,9/9/13,,,Romona686,Cruickshank494,Romona686 Cruickshank494,,black,nonhispanic,F,Ipswich,Massachusetts,1938,17836.6,13403.05,136314,12,FALSE
+d2bf16e1-62a2-a46e-284c-c923e3fa4327,3/14/18,,,Corinne382,Legros616,Corinne382 Legros616,,white,nonhispanic,F,Mount Washington,Massachusetts,0,1318.72,32805.61,2793,8,FALSE
+9bd60b50-8402-5f9a-6f24-f492e8729eb5,10/16/21,,,Hildred696,Hilll811,Hildred696 Hilll811,,white,nonhispanic,F,Boston,Massachusetts,2121,29522.41,10923.07,104525,4,FALSE
+5094c0f7-119a-924c-13ef-53d054461d21,12/6/97,,Mr.,Marcos263,Domínquez36,Marcos263 Domínquez36,M,white,hispanic,M,Fitchburg,Massachusetts,1420,9393.35,774798.27,5354,28,FALSE
+514ad0de-384b-577c-4de4-78cb2d156391,3/31/72,,Mrs.,Waltraud488,Stracke611,Waltraud488 Stracke611,M,white,nonhispanic,F,Clarksburg,Massachusetts,0,803162.28,604395.39,35328,54,FALSE
+e39fa777-dc9e-e86a-4137-01b23ae746a5,11/24/76,,Mrs.,Golda777,Heller342,Golda777 Heller342,D,white,nonhispanic,F,Carver,Massachusetts,0,568961.85,438061.49,97594,49,FALSE
+01ba763c-ce8b-7610-7ff0-c5ed527ec673,3/9/97,4/19/23,Mr.,Johnathon489,Wisoky380,Johnathon489 Wisoky380,,white,nonhispanic,M,Westford,Massachusetts,0,113705.38,60118.61,190561,26,TRUE
+e7e5161c-9176-dca9-3b7b-657aba5cd107,5/10/79,,Ms.,Adriana394,Benavides239,Adriana394 Benavides239,S,white,hispanic,F,Milford,Massachusetts,1757,524532.4,652062.05,44757,47,FALSE
+d1e805d9-a501-36ca-bf99-5350af22a877,3/9/97,,Mr.,Victor265,Ritchie586,Victor265 Ritchie586,M,white,nonhispanic,M,Westford,Massachusetts,0,49321.41,5289.55,190561,29,FALSE
+97effce1-107c-d064-5d72-aa16ae4a095c,11/14/62,,Ms.,Emma804,Rohan584,Emma804 Rohan584,S,white,nonhispanic,F,Lynn,Massachusetts,1906,22072.94,1347084.42,16109,63,FALSE
+4255779e-1851-2ae8-dac4-60bde7689f7b,12/25/91,,Mrs.,Rozella39,Kuhlman484,Rozella39 Kuhlman484,M,white,nonhispanic,F,Brookline,Massachusetts,2467,198289.75,299381.12,508769,34,FALSE
+a302efee-0bc2-425a-08f9-18f8a4cd3144,8/24/56,,Mrs.,Jacqueline49,Schultz619,Jacqueline49 Schultz619,W,white,nonhispanic,F,Wilbraham,Massachusetts,1095,279251.21,140820.77,41502,69,FALSE
+c34b9fc0-9cd6-725b-a8e9-21d693850b55,11/11/58,8/1/01,Mrs.,Loreta61,Weimann465,Loreta61 Weimann465,M,white,nonhispanic,F,Hawley,Massachusetts,0,26918.7,648231.49,1572,42,TRUE
+c1d47451-8cd4-843a-796f-ad42599da19c,5/26/64,4/28/25,Mr.,Dwayne786,Botsford977,Dwayne786 Botsford977,M,white,nonhispanic,M,Worcester,Massachusetts,1608,179107.92,99135.05,135003,60,TRUE
+c830177b-c99a-2939-1edf-1420718a4a74,12/27/74,,Mr.,Werner409,Lueilwitz711,Werner409 Lueilwitz711,M,white,nonhispanic,M,Boston,Massachusetts,2127,463623.95,311245.32,100413,51,FALSE
+cb5814f6-1678-da3d-e57d-5e4fc8d010c3,5/26/64,,Mr.,Isaiah615,Schimmel440,Isaiah615 Schimmel440,D,white,nonhispanic,M,Worcester,Massachusetts,1609,185186.75,55874.3,135003,62,FALSE
+67e00c58-d6fe-5f0d-400e-9b89fc52d916,2/19/92,,Mr.,Doyle959,Bayer639,Doyle959 Bayer639,M,white,nonhispanic,M,Holbrook,Massachusetts,2368,49847.56,1134.23,892231,34,FALSE
+2f1e6b1d-7021-cc53-c632-9c4d4c767f0a,7/21/91,,Mr.,José Luis472,Maldonado119,José Luis472 Maldonado119,M,white,hispanic,M,Taunton,Massachusetts,2718,62301.87,123267.53,87909,34,FALSE
+33a3de2f-d27a-13fb-c5a7-62d2993d2321,12/21/13,,,Paul232,Smitham825,Paul232 Smitham825,,white,nonhispanic,M,Brookline,Massachusetts,2446,2395.86,70705.11,20087,12,FALSE
+cc0f3cdb-1882-1d37-47ce-2ce320c85d0a,3/24/93,,Mr.,Clay913,Ondricka197,Clay913 Ondricka197,M,white,nonhispanic,M,Lunenburg,Massachusetts,1462,85324.28,0,38044,33,FALSE
+2325cd6a-0217-1ede-d5b9-1c9d885f1f56,6/2/79,,Ms.,Jenifer459,Ledner144,Jenifer459 Ledner144,S,white,hispanic,F,Warren,Massachusetts,1083,217379.84,741795.24,32301,47,FALSE
+86183f95-44a3-e8e9-e1e9-814c45c55baf,11/11/58,,Mrs.,Audie868,Altenwerth646,Audie868 Altenwerth646,M,white,nonhispanic,F,Hawley,Massachusetts,0,41199.68,1829097.81,1572,67,FALSE
+b14f88ed-f753-91e4-3b28-116fe7af36a0,2/21/52,12/20/10,Mrs.,Caridad510,Cardona494,Caridad510 Cardona494,M,other,hispanic,F,Lawrence,Massachusetts,1840,382214.77,796183.46,129464,58,TRUE
+3443d9ac-57cf-d228-b831-2ca787ddeb2f,3/22/91,,Mrs.,Ashely524,Harber290,Ashely524 Harber290,M,white,hispanic,F,Boston,Massachusetts,2136,96705.15,651047.91,675,35,FALSE
+649f7b66-bc80-15cc-3d32-ea44bf0a69e8,12/10/72,,Mr.,Herbert830,Cormier289,Herbert830 Cormier289,M,white,nonhispanic,M,New Bedford,Massachusetts,2745,21102.43,504490.89,19472,53,FALSE
+3da68fbe-0b08-2747-dc0e-437b9970c8cd,4/26/26,,,Darryl392,Gislason620,Darryl392 Gislason620,,white,nonhispanic,M,Pembroke,Massachusetts,0,875.19,0,108116,0,FALSE
+f5df71f1-8042-b374-0882-939d567f63dd,4/21/22,,,Jutta270,Runolfsson901,Jutta270 Runolfsson901,,white,nonhispanic,F,Ipswich,Massachusetts,1938,10243.17,11812.65,72153,4,FALSE
+03112dec-e648-dc9c-2f26-3d47e1266ded,2/21/52,,Mrs.,Mariana775,Barraza113,Mariana775 Barraza113,M,other,hispanic,F,Lawrence,Massachusetts,1840,185690.91,140182.83,129464,74,FALSE
+7a351fec-de09-1605-7053-5bfb6766dffa,4/8/72,,Mrs.,Brenna468,Feeney44,Brenna468 Feeney44,M,white,nonhispanic,F,Lowell,Massachusetts,1852,477169.75,452851.09,62708,54,FALSE
+6f19b915-5952-c6ca-b6ed-dd5c2cc3ac56,1/27/70,,Mrs.,Valrie435,Dare640,Valrie435 Dare640,W,asian,nonhispanic,F,Sudbury,Massachusetts,0,128039.06,577638.55,686083,56,FALSE
+d83d3c90-a080-c091-c315-9e2191e44363,6/23/66,10/21/19,Mr.,Elvin140,Franecki195,Elvin140 Franecki195,M,asian,nonhispanic,M,Oxford,Massachusetts,1540,107976.87,669950.48,167040,53,TRUE
+5e8f48f8-0765-a550-2c5b-585d990dc122,12/13/77,,Mrs.,Estela596,Barrios478,Estela596 Barrios478,M,white,hispanic,F,Nahant,Massachusetts,1908,115036.71,250023.57,185101,48,FALSE
+10bfdde5-43df-8030-5277-0606e3d6203c,7/16/95,,Mrs.,Catrice481,Kerluke267,Catrice481 Kerluke267,M,white,nonhispanic,F,Newton,Massachusetts,2472,59169.37,232893.66,101425,30,FALSE
+68304585-b99b-3781-c935-71b746663e01,2/23/21,,,Gail741,Hahn503,Gail741 Hahn503,,white,nonhispanic,M,Yarmouth,Massachusetts,0,908.63,19767.41,2032,5,FALSE
+3608c813-327f-09ed-4fb9-314d502b68cb,6/23/66,,Mr.,Jarod376,Bergstrom287,Jarod376 Bergstrom287,S,asian,nonhispanic,M,Oxford,Massachusetts,1540,147771.81,47220.87,167040,59,FALSE
+4cf494fe-0a75-6502-5031-8859fab8fe57,5/24/21,,,Elvina437,McCullough561,Elvina437 McCullough561,,white,nonhispanic,F,Walpole,Massachusetts,2081,9956.98,10667.9,115286,5,FALSE
+10a43c50-4bb7-df97-c21a-fcc349869e24,7/23/64,,Mr.,Errol226,Lehner980,Errol226 Lehner980,M,black,nonhispanic,M,Natick,Massachusetts,0,116599.52,184089.03,26938,61,FALSE
+7320643a-0fc2-1ff3-27b5-5a2b7225e940,11/6/47,,Mrs.,Angila948,Lueilwitz711,Angila948 Lueilwitz711,M,white,nonhispanic,F,Falmouth,Massachusetts,2540,989972.93,378772.72,37864,78,FALSE
+53757056-20f1-fd4d-b204-d6972f27c27f,9/1/72,,Mr.,Jacques50,Abernathy524,Jacques50 Abernathy524,S,white,nonhispanic,M,Gardner,Massachusetts,1440,134532.08,0,57840,53,FALSE
+acfbc141-31a0-1b38-ca04-5d89b27de80c,2/11/77,,Mrs.,Davida245,Gleichner915,Davida245 Gleichner915,M,white,nonhispanic,F,Amherst,Massachusetts,0,711831.39,485308.39,73371,49,FALSE
+56cb71e6-0d69-d211-3b19-73e43d75dc26,8/10/89,,Mrs.,Dara636,Armstrong51,Dara636 Armstrong51,M,white,nonhispanic,F,Waltham,Massachusetts,2453,151474.3,1036412.06,752820,36,FALSE
+a08c7d55-8400-6d5d-908f-13a33e8214c0,6/30/66,,Mrs.,Marisela850,Mayer370,Marisela850 Mayer370,D,white,nonhispanic,F,Wilbraham,Massachusetts,1095,837015.18,74514.49,68569,59,FALSE
+670ea0d6-8600-0eef-ae31-c2dffd6b5894,1/21/89,,Mr.,Reynaldo722,Gleichner915,Reynaldo722 Gleichner915,W,white,nonhispanic,M,Sandwich,Massachusetts,2563,111739.14,15030.85,43834,37,FALSE
+91b12bb6-a93b-e4dc-0fec-51a330037af2,6/18/62,,Mr.,Dusty207,McDermott739,Dusty207 McDermott739,M,asian,nonhispanic,M,Cambridge,Massachusetts,2139,265754.6,584972.36,43345,64,FALSE
+4b05d74b-d9cb-fcf7-f656-4830cec62fac,2/26/55,,Mr.,Carmen818,Wiegand701,Carmen818 Wiegand701,S,white,nonhispanic,M,New Bedford,Massachusetts,2747,283940.92,79066.14,64109,71,FALSE
+0c3956ce-3d6e-51f6-4fd0-0dc37ce65cfd,8/3/06,,Ms.,Alyssa971,Nienow652,Alyssa971 Nienow652,,white,nonhispanic,F,Brockton,Massachusetts,2302,3500,52855.65,4730,19,FALSE
+ddcc5268-1271-fe06-f7ee-1fe645fc1733,6/23/04,,Ms.,Bernadette714,Reichert620,Bernadette714 Reichert620,,white,nonhispanic,F,Merrimac,Massachusetts,0,81560.87,621217.47,82287,21,FALSE
+d72eef36-70c7-896f-2c6a-98a90c37e2d4,6/26/42,6/6/25,Mrs.,Kendal125,Conroy74,Kendal125 Conroy74,M,white,nonhispanic,F,Plymouth,Massachusetts,2360,1495400.11,395297.4,84233,83,TRUE
+94e1acbd-dd9c-977c-61c7-4bf24f8401fe,3/31/54,,Mr.,Son314,Kunde533,Son314 Kunde533,S,white,nonhispanic,M,Fall River,Massachusetts,2724,22412.45,422407.57,13910,72,FALSE
+ad69b00d-e8b9-5194-44eb-d5aa42424c3d,6/26/42,,Ms.,Dolly486,Bernier607,Dolly486 Bernier607,S,white,nonhispanic,F,Plymouth,Massachusetts,2360,1235458.43,300463.52,84233,84,FALSE
+2c490ba7-cbf7-e71b-5338-00dab01da70d,3/14/77,,Mrs.,Cassie490,Moore224,Cassie490 Moore224,M,white,nonhispanic,F,Lexington,Massachusetts,2421,275368.09,562727.3,139175,49,FALSE
+702e8d31-378e-9add-4951-ad949da2018b,1/14/17,,,Luise714,Crist667,Luise714 Crist667,,other,nonhispanic,F,Chicopee,Massachusetts,1020,29807.99,620.77,96159,9,FALSE
+e60e1ddc-b54e-a6f2-14d3-bb142465e33a,11/22/52,,Mr.,Norbert530,Muller251,Norbert530 Muller251,D,white,nonhispanic,M,Westwood,Massachusetts,0,202015.88,302643.19,900558,73,FALSE
+1ea0b812-a608-68aa-033d-af4b0506252b,7/11/20,,,Cassidy160,Turcotte120,Cassidy160 Turcotte120,,white,nonhispanic,F,Boston,Massachusetts,2125,5392.14,16377.96,347,5,FALSE
+e0de7b0a-c40b-6467-c099-0f9467be6c0a,4/24/64,,Mr.,Agustin437,Hills818,Agustin437 Hills818,D,white,nonhispanic,M,Chatham,Massachusetts,2633,306789.01,557193.08,496418,62,FALSE
+f871e4dc-ea49-ae10-f488-cabc2a581bc3,10/7/08,,,Shin962,Dooley940,Shin962 Dooley940,,white,nonhispanic,F,Springfield,Massachusetts,1129,38633.91,6169.09,43939,17,FALSE
+029546ae-faec-700d-06f9-b2726c57cd2d,2/26/19,,,Geraldo282,Gulgowski816,Geraldo282 Gulgowski816,,white,nonhispanic,M,Randolph,Massachusetts,2368,16109.84,299.88,55362,7,FALSE
+4e81c560-81c5-dc7b-9127-aa5f5ba9c4c8,1/9/16,7/14/93,Mr.,Dallas143,Romaguera67,Dallas143 Romaguera67,M,white,hispanic,M,Lawrence,Massachusetts,1841,267319.26,2376655.21,43389,77,TRUE
+5ac2f378-ed3e-8652-19aa-868452583922,7/27/93,,Mrs.,Walter473,King743,Walter473 King743,M,white,nonhispanic,F,Swansea,Massachusetts,0,88004.92,331827.6,470070,32,FALSE
+3e1a2634-4793-b134-8296-20c0cb37f5b2,12/20/64,11/23/15,Mr.,Anibal473,Lockman863,Anibal473 Lockman863,M,white,nonhispanic,M,Dracut,Massachusetts,0,9763.32,148789.64,18303,50,TRUE
+4e1288ee-3495-1de4-e6a2-31765aab8593,8/20/82,1/4/19,Mr.,Irving123,Schmidt332,Irving123 Schmidt332,M,white,nonhispanic,M,Millis,Massachusetts,0,44582.74,129934.82,28084,36,TRUE
+a85b8544-5fa1-0de2-be07-1fca661f6879,6/12/71,,Mr.,José Emilio366,Zamora648,José Emilio366 Zamora648,M,white,hispanic,M,Boston,Massachusetts,2115,25668.28,877831.71,20197,55,FALSE
+ba696827-b735-e09f-e5f5-f15037dc9701,8/20/82,,Mr.,Josiah310,Yundt842,Josiah310 Yundt842,M,white,nonhispanic,M,Millis,Massachusetts,0,75041.66,13361.08,28084,43,FALSE
+b084297c-c410-108c-9499-aa99d25e761c,12/20/64,,Mr.,Dorsey40,Macejkovic424,Dorsey40 Macejkovic424,S,white,nonhispanic,M,Dracut,Massachusetts,0,12991.84,368550,18303,61,FALSE
+eee9e0d0-6339-4fd4-1010-ca2049901226,4/22/82,,Mrs.,Isis628,Von197,Isis628 Von197,M,white,nonhispanic,F,Middleborough,Massachusetts,0,347225.98,753107.79,123668,44,FALSE
+c1ed192a-9f8a-e043-a9a7-27a8edb15d7f,4/12/21,,,Barrett790,Rutherford999,Barrett790 Rutherford999,,white,nonhispanic,M,Rochester,Massachusetts,0,15621.45,5718.55,61689,5,FALSE
+31a7dbc1-079c-e5c4-4b26-8a6fa371f044,12/5/58,,Mrs.,Stephenie799,Fadel536,Stephenie799 Fadel536,D,white,nonhispanic,F,Pinehurst,Massachusetts,1866,388315.76,691081.76,131676,67,FALSE
+243b6be7-c466-358a-c9ed-83f70d244d29,8/8/92,,Mr.,Jeramy610,Swaniawski813,Jeramy610 Swaniawski813,S,white,nonhispanic,M,Ashburnham,Massachusetts,0,90598.2,5824.03,889083,33,FALSE
+4be0e308-0403-7081-3d54-02d8dd95bffe,6/19/21,,,Dorotea472,Henríquez109,Dorotea472 Henríquez109,,white,hispanic,F,Medford,Massachusetts,2155,42413.56,0,67667,4,FALSE
+6c075c13-02db-6069-9661-93e86802fe46,11/7/70,,Mr.,Jim478,Jast432,Jim478 Jast432,M,white,hispanic,M,Chelsea,Massachusetts,2149,9104.6,176580.83,22368,55,FALSE
+2a2bd415-e59e-ae60-2cc3-39f5c9e66025,3/31/81,,Mrs.,Sigrid676,Klein929,Sigrid676 Klein929,M,white,nonhispanic,F,Millbury,Massachusetts,0,208008.67,458847.45,172991,45,FALSE
+ab3dc837-38ee-a41d-8850-8393bcb66ecc,5/24/70,,Mr.,Foster87,Smith67,Foster87 Smith67,M,white,nonhispanic,M,Greenfield,Massachusetts,1301,138748.95,49000.49,86826,56,FALSE
+aa7dcd69-9e2b-469d-dcb1-ba347449d75b,8/23/68,,Ms.,Tyesha844,Hills818,Tyesha844 Hills818,S,white,hispanic,F,Haverhill,Massachusetts,1830,683836.47,425978.18,69929,57,FALSE
+a30f8b8c-5e25-67ee-e3db-7d2d3a01e657,1/11/02,,Mr.,Jamal145,Schiller186,Jamal145 Schiller186,,white,nonhispanic,M,Boston,Massachusetts,2113,4593.56,62619.08,10294,24,FALSE
+d6e1da47-2631-04cf-8c5c-e656ecaa77ee,12/4/74,,Ms.,Belkis212,Stanton715,Belkis212 Stanton715,S,black,nonhispanic,F,Middleborough,Massachusetts,0,711879.29,253620.23,84631,51,FALSE
+b61008f3-84e2-8e3f-abd9-995a23133d57,1/3/78,,Mrs.,Afton574,Greenholt190,Afton574 Greenholt190,M,hawaiian,nonhispanic,F,Haverhill,Massachusetts,1835,296903.32,199284.31,58739,48,FALSE
+7536501d-f35d-456d-5cd2-4cfefd144553,4/19/91,,Mr.,Guy979,Bosco882,Guy979 Bosco882,M,asian,nonhispanic,M,Medfield,Massachusetts,2052,123302.9,631588.06,124350,35,FALSE
+c303f8a0-d9b7-709b-fbe2-57ed2b5732e2,1/9/16,8/22/76,Mr.,Arron144,Walsh511,Arron144 Walsh511,M,white,hispanic,M,Lawrence,Massachusetts,1840,229622.78,518617.85,43389,60,TRUE
+b500c402-d318-dcaf-3bdb-65eb4ffeefcf,10/20/78,,Mr.,Emery884,Morissette863,Emery884 Morissette863,S,white,nonhispanic,M,Arlington,Massachusetts,2474,62675.09,27398.71,75147,47,FALSE
+f316128d-b601-4805-93b9-738097b1a3d5,11/21/54,9/19/12,Mrs.,Caryl47,Kovacek682,Caryl47 Kovacek682,M,white,nonhispanic,F,Haverhill,Massachusetts,1832,220931,286420.72,137467,57,TRUE
+a51c6e13-e38a-334c-2007-77a5ff2eaef4,11/20/50,,Mrs.,Deloris888,Dietrich576,Deloris888 Dietrich576,D,white,nonhispanic,F,Quincy,Massachusetts,2186,302425.28,513718.47,139548,75,FALSE
+f93ab485-c417-8196-3bf3-363f3cf29f65,1/31/76,,Mrs.,Lakesha141,Bauch723,Lakesha141 Bauch723,D,other,hispanic,F,Springfield,Massachusetts,1013,24380.65,890555.95,10439,50,FALSE
+92fd59ae-6a3c-cd90-f1aa-88ee1beb40d0,8/1/08,,,Julio255,Rangel145,Julio255 Rangel145,,white,hispanic,M,Braintree,Massachusetts,2184,65076.66,0,88053,17,FALSE
+2eda7a8b-a5b4-a5b2-91d9-cf077b587db4,11/21/54,,Mrs.,Jessi630,Jerde200,Jessi630 Jerde200,M,white,nonhispanic,F,Haverhill,Massachusetts,1835,346935.41,634218.19,137467,71,FALSE
+12aa09c7-a718-b1ef-6fa4-4230dbeefd31,5/3/73,,Mr.,Davis923,Monahan736,Davis923 Monahan736,D,white,nonhispanic,M,Boston,Massachusetts,2127,146436.45,39044.66,145950,53,FALSE
+4812bfae-0168-b71d-f979-bb5c915324e1,8/28/75,,Mr.,Santiago500,Boehm581,Santiago500 Boehm581,D,white,nonhispanic,M,Stoughton,Massachusetts,0,156812.07,193943.85,24012,50,FALSE
+93551fec-62f7-db5d-e2d4-65cfedfa8f50,3/31/74,,Mrs.,Toby274,McGlynn426,Toby274 McGlynn426,D,white,nonhispanic,F,New Bedford,Massachusetts,2744,374151.17,232084.93,93066,52,FALSE
+f7594a32-b115-5081-698f-53f5b6da80ee,8/24/02,,Mr.,Porfirio146,Schaden604,Porfirio146 Schaden604,,white,nonhispanic,M,Fall River,Massachusetts,2747,39803.15,36736.41,97218,23,FALSE
+2e500f97-3b3e-51ed-9a41-41d5dae4e04f,2/2/92,,Mr.,Josh874,Mitchell808,Josh874 Mitchell808,S,white,nonhispanic,M,Quincy,Massachusetts,2169,102897.24,46592.24,733035,34,FALSE
+c2ee13ef-00eb-4a5c-5947-36e46f5ea7fa,11/10/58,,Mrs.,Anna632,Reilly981,Anna632 Reilly981,D,white,nonhispanic,F,Ipswich,Massachusetts,1938,20731.55,1729803.81,22793,67,FALSE
+c86741d6-b37d-45c8-7527-1c76e081bbd1,9/27/11,,,Selena146,Sawayn19,Selena146 Sawayn19,,white,nonhispanic,F,Randolph,Massachusetts,2368,31137.21,0,101175,14,FALSE
+1886e787-4ede-20dc-d857-41b33d6493c2,12/3/74,,Mrs.,Rosio404,Moen819,Rosio404 Moen819,M,white,nonhispanic,F,Framingham,Massachusetts,1702,576467.7,269864.36,40751,51,FALSE
+bc9a740c-4f16-09e0-26d7-8ae263779c65,7/22/85,,Ms.,Rosemarie149,Koss676,Rosemarie149 Koss676,S,white,nonhispanic,F,Springfield,Massachusetts,1119,13019,657088.94,21181,40,FALSE
+5619da31-958a-eb7d-3042-5f6f6d033e88,4/11/04,,Mr.,Terrell212,Stanton715,Terrell212 Stanton715,,white,nonhispanic,M,Groton,Massachusetts,1450,52997.73,14008.78,58372,22,FALSE
+e8e59dfb-b161-68ba-fffa-c6f535602f11,1/9/16,9/24/02,Mr.,Edgardo196,Schaden604,Edgardo196 Schaden604,S,white,hispanic,M,Lawrence,Massachusetts,1843,365845.26,718719.8,43389,86,TRUE
+ed0c7b5c-58c9-3aa6-f9b2-47312d39aeef,10/14/94,,Mrs.,Florence828,Predovic534,Florence828 Predovic534,M,white,nonhispanic,F,Newton,Massachusetts,2464,522367.68,146675.45,86817,31,FALSE
+07184124-ab60-b897-b0e8-07b3318c8d9c,1/28/80,,Ms.,Patrice780,Stokes453,Patrice780 Stokes453,S,white,nonhispanic,F,Somerville,Massachusetts,2155,330753.5,430222.82,93114,46,FALSE
+584f2223-1e99-1441-6a06-7908a030ced9,1/28/82,,Mr.,Trevor374,Dibbert990,Trevor374 Dibbert990,M,white,nonhispanic,M,Quincy,Massachusetts,2171,153503.73,65786.86,135915,44,FALSE
+c1c76e76-f9ef-e022-fbfb-b19c49bb1fdf,3/28/98,,Mrs.,Lynne528,Feil794,Lynne528 Feil794,M,white,nonhispanic,F,Ipswich,Massachusetts,1938,173817.04,320090.39,88620,28,FALSE
+0f35a3d1-6d32-2f29-4e1c-a27560dde1ee,7/28/80,,Mrs.,Eveline832,Keebler762,Eveline832 Keebler762,M,white,nonhispanic,F,New Bedford,Massachusetts,2743,8755.02,362673.27,22506,45,FALSE
+6a292dd0-df32-d548-98e4-34df7770b710,10/25/88,,Mrs.,Debroah867,Reynolds644,Debroah867 Reynolds644,M,white,nonhispanic,F,Holden,Massachusetts,0,11282.87,674114.28,10006,37,FALSE
+50832f56-6fba-abc1-d212-3e4cb0993823,5/4/10,,,Benny518,Goyette777,Benny518 Goyette777,,white,nonhispanic,M,Kingston,Massachusetts,2364,51414.7,15588.57,126544,16,FALSE
+e65474c7-e574-ecf3-472b-2a3430455d2d,7/10/67,,Mr.,Elbert916,Ferry570,Elbert916 Ferry570,M,white,nonhispanic,M,Swampscott,Massachusetts,1907,160521.74,74897.55,838762,58,FALSE
+25127bd5-f9aa-30d5-d3f9-c5c88e27d527,1/9/16,,Mr.,Kent912,Wiza601,Kent912 Wiza601,S,white,hispanic,M,Lawrence,Massachusetts,1843,347008.3,194742.65,43389,110,FALSE
+80d8aaa2-ef65-5f53-3a31-a3823d7e0151,3/7/13,,,Hae300,Rolfson709,Hae300 Rolfson709,,white,nonhispanic,F,Pittsfield,Massachusetts,1201,43080.82,0,46108,13,FALSE
+583ce668-85c2-9599-09bb-4c6d620a795d,4/28/55,12/28/24,Mrs.,Earline566,Parker433,Earline566 Parker433,M,white,nonhispanic,F,Boston,Massachusetts,2113,292894.92,985985.36,172333,69,TRUE
+d6fc4f34-d0ac-a09b-94e4-01fc4a44d3a8,4/28/55,,Mrs.,Cheree978,Windler79,Cheree978 Windler79,M,white,nonhispanic,F,Boston,Massachusetts,2116,387404.27,1137800.72,172333,71,FALSE
