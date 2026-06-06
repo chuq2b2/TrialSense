@@ -4,7 +4,7 @@ Around 80% of trials fail to meet the initial enrollment target and timeline, an
 
 Solution: TrialSense, an AI-Powered EHR-intergrated platform that automatically identifies, scores, and presents the most eligible patients for any clinical trial.
 
-Here is the demo of TrialSense, using public synthetic patient dataset of 111 patients with different diseases (https://synthea.mitre.org/) and public clinical trial (clinialtrial.gov). We use Cursor to assist with building code for LLM model for clinical trial matching, and Nebius to run the AI model. 
+Here is codebase for TrialSense, using public synthetic patient dataset of 111 patients with different diseases (https://synthea.mitre.org/) and public clinical trial ([clinialtrial.gov](https://clinicaltrials.gov/)). We use Cursor to assist with building code for LLM model for clinical trial matching, and Nebius to run the AI model. 
 
 # Run it locally
 
