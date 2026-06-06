@@ -27,3 +27,21 @@ class TrialSummary(BaseModel):
     conditions: list[str] = []
     eligibility: EligibilityCriteria
     ctgov_url: str
+
+
+class MaskedPatientMatch(BaseModel):
+    match_percent: float
+    match_band: str
+    hospital_name: str
+    pcp_contact: str
+    exclusion_reasons: list[str] = []
+    needs_manual_review: bool = False
+
+
+class TrialMatchResponse(BaseModel):
+    nct_id: str
+    pool_size: int
+    prefilter_passed: int
+    structured_criteria: dict
+    matches: list[MaskedPatientMatch]
+    data_source: str = "csv"
