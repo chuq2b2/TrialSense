@@ -7,9 +7,9 @@ from nebius_client import NebiusError, chat_json
 from patients import parse_age_years
 
 GROUP_WEIGHTS = {
-    "hard_exclusion": 5,
-    "core_inclusion": 3,
-    "soft_preference": 1,
+    "hard_exclusion": 3,
+    "core_inclusion": 1,
+    "soft_preference": 0.5,
 }
 
 CRITERIA_SYSTEM_PROMPT = """You are a clinical trial eligibility analyst.
@@ -18,7 +18,7 @@ Extract trial eligibility into structured JSON for automated patient matching.
 Rules:
 - Split every criterion into exactly one group:
   - hard_exclusion (weight 5): age outside range, forbidden diagnoses, prohibited treatments, pregnancy, unsafe labs, etc.
-  - core_inclusion (weight 3): required diagnosis, biomarker, line of therapy, organ function, ECOG, prior treatment history
+  - core_inclusion (weight 1): required diagnosis, biomarker, line of therapy, organ function, ECOG, prior treatment history
   - soft_preference (weight 1): geography, visit burden, insurance, optional imaging/genomics
 - Each criterion needs assessable_fields from: age, sex, conditions, medications, bmi, hba1c_pct, glucose_mgdl, systolic_bp, diastolic_bp, cholesterol_mgdl
 - Add sql_prefilter when a hard rule can be checked without LLM:

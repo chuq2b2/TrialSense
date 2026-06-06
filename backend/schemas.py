@@ -44,6 +44,14 @@ class InclusionSummary(BaseModel):
     criteria: list[InclusionCriterionDetail] = []
 
 
+class ExclusionSummary(BaseModel):
+    total: int
+    cleared: int
+    triggered: int
+    unverified: int
+    criteria: list[InclusionCriterionDetail] = []
+
+
 class PatientDetails(BaseModel):
     patient_id: str
     full_name: str
@@ -74,6 +82,7 @@ class PatientMatch(BaseModel):
     exclusion_reasons: list[str] = []
     needs_manual_review: bool = False
     inclusion_summary: InclusionSummary
+    exclusion_summary: ExclusionSummary
 
 
 class TrialMatchResponse(BaseModel):

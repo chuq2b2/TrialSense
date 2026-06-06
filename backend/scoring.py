@@ -26,6 +26,7 @@ MATCH_BANDS = [
 ]
 
 INCLUSION_GROUPS = {"core_inclusion", "soft_preference"}
+EXCLUSION_GROUP = "hard_exclusion"
 
 SCORING_SYSTEM_PROMPT = """You are a clinical trial eligibility scoring engine.
 Score conservatively — only use "1" when clearly met, "0" when clearly not met.
@@ -282,6 +283,62 @@ def _criterion_status(score: str, assessable: bool) -> str:
     return "unmet"
 
 
+def _exclusion_criterion_status(score: str, assessable: bool) -> str:
+    if not assessable or score.upper() == "U":
+        return "unverified"
+    if score == "1":
+        return "cleared"
+    return "triggered"
+
+
+def summarize_exclusion_match(
+    criteria: list[dict],
+    criterion_scores: list[dict],
+    *,
+    patient: PatientRecord | None = None,
+    structured: dict | None = None,
+) -> dict:
+    score_map = {item["criterion_id"]: item for item in criterion_scores}
+    exclusion_criteria = [
+        criterion
+        for criterion in criteria
+        if criterion.get("group") == EXCLUSION_GROUP
+    ]
+
+    details: list[dict] = []
+    counts = {"cleared": 0, "triggered": 0, "unverified": 0}
+
+    for criterion in exclusion_criteria:
+        entry = _resolve_criterion_entry(
+            criterion, score_map, patient=patient, structured=structured
+        )
+        score = "U"
+        assessable = False
+        reason = "Insufficient patient data to verify"
+        if entry:
+            score = str(entry.get("score", "U")).upper()
+            assessable = entry.get("assessable", False)
+            reason = entry.get("reason") or reason
+
+        status = _exclusion_criterion_status(score, assessable)
+        counts[status] += 1
+        details.append(
+            {
+                "description": criterion.get("description", ""),
+                "status": status,
+                "reason": reason,
+            }
+        )
+
+    return {
+        "total": len(exclusion_criteria),
+        "cleared": counts["cleared"],
+        "triggered": counts["triggered"],
+        "unverified": counts["unverified"],
+        "criteria": details,
+    }
+
+
 def summarize_inclusion_match(
     criteria: list[dict],
     criterion_scores: list[dict],
@@ -343,23 +400,21 @@ def calculate_match_percent(
     *,
     patient: PatientRecord | None = None,
     structured: dict | None = None,
-) -> tuple[float, bool, list[str], dict]:
+) -> tuple[float, bool, list[str], dict, dict]:
     score_map = {item["criterion_id"]: item for item in criterion_scores}
     exclusion_reasons: list[str] = []
 
-    for criterion in criteria:
-        if criterion.get("group") != "hard_exclusion":
-            continue
-        entry = _resolve_criterion_entry(
-            criterion, score_map, patient=patient, structured=structured
-        )
-        if not entry:
-            continue
-        score = str(entry.get("score", "U")).upper()
-        assessable = entry.get("assessable", False)
-        if assessable and score == "0":
+    exclusion_summary = summarize_exclusion_match(
+        criteria,
+        criterion_scores,
+        patient=patient,
+        structured=structured,
+    )
+
+    for detail in exclusion_summary["criteria"]:
+        if detail["status"] == "triggered":
             exclusion_reasons.append(
-                entry.get("reason") or criterion.get("description", "")
+                detail.get("reason") or detail.get("description", "")
             )
 
     inclusion_summary = summarize_inclusion_match(
@@ -370,7 +425,7 @@ def calculate_match_percent(
     )
 
     if exclusion_reasons:
-        return 0.0, True, exclusion_reasons, inclusion_summary
+        return 0.0, True, exclusion_reasons, inclusion_summary, exclusion_summary
 
     inclusion_criteria = [
         criterion
@@ -378,7 +433,7 @@ def calculate_match_percent(
         if criterion.get("group") in INCLUSION_GROUPS
     ]
     if not inclusion_criteria:
-        return 0.0, True, [], inclusion_summary
+        return 0.0, True, [], inclusion_summary, exclusion_summary
 
     weighted_score = 0.0
     weighted_total = 0.0
@@ -407,7 +462,7 @@ def calculate_match_percent(
         weighted_score += weight * _criterion_points(score)
 
     if weighted_total == 0:
-        return 0.0, True, [], inclusion_summary
+        return 0.0, True, [], inclusion_summary, exclusion_summary
 
     raw_percent = 100 * weighted_score / weighted_total
     verified_ratio = (
@@ -420,7 +475,7 @@ def calculate_match_percent(
     if inclusion_summary["met"] < inclusion_summary["total"]:
         needs_review = True
 
-    return percent, needs_review, [], inclusion_summary
+    return percent, needs_review, [], inclusion_summary, exclusion_summary
 
 
 def _heuristic_scores(
@@ -570,13 +625,17 @@ def rank_patients(
         score_by_ref = {item["ref"]: item for item in batch_scores}
         for patient, ref in zip(batch, refs, strict=True):
             entry = score_by_ref.get(ref, {"criteria_scores": []})
-            percent, needs_review, exclusion_reasons, inclusion_summary = (
-                calculate_match_percent(
-                    criteria,
-                    entry.get("criteria_scores", []),
-                    patient=patient,
-                    structured=structured,
-                )
+            (
+                percent,
+                needs_review,
+                exclusion_reasons,
+                inclusion_summary,
+                exclusion_summary,
+            ) = calculate_match_percent(
+                criteria,
+                entry.get("criteria_scores", []),
+                patient=patient,
+                structured=structured,
             )
             organization_phone = patient.pcp_contact or "Contact unavailable"
             patient_details = patient_to_match_details(patient)
@@ -595,6 +654,7 @@ def rank_patients(
                     "exclusion_reasons": exclusion_reasons,
                     "needs_manual_review": needs_review,
                     "inclusion_summary": inclusion_summary,
+                    "exclusion_summary": exclusion_summary,
                 }
             )
 
