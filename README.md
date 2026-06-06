@@ -1,55 +1,228 @@
+# TrialSense
 
-# Problem
-Clinical trial patient recruitment has long been a signficant challenge. Failure to enroll patient is one of the leading cause of clinical trial dealy. Recruitmnet process remain highly manual, involves ingesting patient health records, matching complex medical data against trial inclusion/exclusion criteria, and routing verified candidates for human review and informed consent
+TrialSense helps clinical trial coordinators find and rank eligible patients for a study. Enter an NCT ID or ClinicalTrials.gov URL, and the app fetches trial eligibility, scores synthetic patients against inclusion/exclusion criteria, and returns a ranked list with match details and PCP contact information.
 
-Around 80% of trials fail to meet the initial enrollment target and timeline, and these delays can result in lost revenue of as much as US $8 million per day for drug developing companies.
+Built for coordinators with appropriate patient data clearance. Patient identifiers and clinical details are shown in match results.
 
-# Solution
-TrialSense, an AI-Powered EHR-intergrated platform that automatically identifies, scores, and presents the most eligible patients for any clinical trial.
+---
 
-Here is codebase for TrialSense, using public synthetic patient dataset of 111 patients with different diseases (https://synthea.mitre.org/) and public clinical trial ([clinialtrial.gov](https://clinicaltrials.gov/)). We use Cursor to assist with building code for LLM model for clinical trial matching, and Nebius to run the AI model. 
+## Problem
 
-# Tech Stack
+Clinical trial patient recruitment remains largely manual. Coordinators must review health records, interpret complex inclusion/exclusion criteria, and route candidates for human review and consent.
 
+Around 80% of trials fail to meet initial enrollment targets on time. Delays can cost drug developers up to **$8M per day** in lost revenue.
 
-# Scoring Engine
-- Parses eligibility text into structured rules (local, no model)
-- Pre-filters patients with SQL hard rules
-- Scores each criterion with hand-written heuristics
-- Aggregates into match %, bands, inclusion/exclusion summaries
+## Solution
 
-We do support Nebius LLM Scoring Match. Try out by editing in config.py file and update
+TrialSense automates the first pass of trial–patient matching:
+
+1. **Fetch** a trial from [ClinicalTrials.gov](https://clinicaltrials.gov)
+2. **Parse** eligibility into structured rules
+3. **Pre-filter** patients with SQL hard rules (age, sex, conditions)
+4. **Score** each patient with a rule-based engine
+5. **Present** ranked matches with inclusion/exclusion breakdowns and PCP contacts
+
+Patient data comes from the public [Synthea](https://synthea.mitre.org/) synthetic dataset (~111 patients). Trial data comes from the ClinicalTrials.gov API.
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|-------|------------|
+| **Frontend** | React 19, Vite, Tailwind CSS v4, shadcn/ui (Radix) |
+| **Backend** | FastAPI, Uvicorn, Pydantic v2 |
+| **Database** | SQLite (default) or PostgreSQL (optional) |
+| **Patient data** | Synthea CSVs → seeded SQLite/Postgres |
+| **Trial data** | ClinicalTrials.gov API v2 |
+| **Optional LLM** | Nebius Token Factory (OpenAI-compatible API) |
+
+---
+
+## How It Works
+
 ```
-USE_LLM_CRITERIA = false   # default
-USE_LLM_SCORING = false    # default
+User enters NCT ID / CT.gov URL
+        ↓
+POST /api/trials/lookup  →  ClinicalTrials.gov
+        ↓
+Trial summary (title, conditions, eligibility text)
+        ↓
+POST /api/trials/match
+        ↓
+┌─────────────────────────────────────────┐
+│  1. Criteria extraction (criteria.py)   │
+│     Parse inclusion/exclusion lines     │
+│     into structured rules + match_terms │
+├─────────────────────────────────────────┤
+│  2. SQL pre-filter (database.py)        │
+│     Age, sex, condition overlap         │
+├─────────────────────────────────────────┤
+│  3. Heuristic scoring (scoring.py)      │
+│     Per-criterion 1 / 0 / 0.5 / U       │
+│     Match %, bands, inclusion/exclusion │
+│     summaries                           │
+└─────────────────────────────────────────┘
+        ↓
+Ranked patient matches → React UI (paginated)
 ```
 
-# Run it locally
+### Scoring engine (default)
 
-1. Terminal 1: backend:
+TrialSense uses an **in-house, rule-based eligibility engine** — not an LLM by default:
+
+- **Local parsing** — splits eligibility text into individual inclusion/exclusion criteria
+- **SQL pre-filter** — hard rules (age range, sex, required/excluded conditions)
+- **Heuristic scorer** — checks patient fields (age, sex, conditions, medications, vitals)
+- **Match %** — weighted inclusion score with verification penalty; hard exclusions block at 0%
+- **Summaries** — per-criterion status (met / unmet / unverified for inclusion; cleared / triggered / unverified for exclusion)
+
+Many trial-specific fields (HER2, ECOG, PCL-5, tumor size, etc.) are **unverified** when Synthea data lacks them — match scores reflect that honestly.
+
+### Optional Nebius LLM
+
+LLM integration exists but is **disabled by default** for speed (~sub-second vs minutes).
+
+Enable in `backend/.env.local`:
+
+```env
+USE_LLM_CRITERIA=true
+USE_LLM_SCORING=true
+NEBIUS_API_KEY=your_key_here
+```
+
+| Flag | Effect |
+|------|--------|
+| `USE_LLM_CRITERIA` | Nebius structures eligibility (fallback: local parser) |
+| `USE_LLM_SCORING` | Nebius scores patients (fallback: heuristics) |
+
+---
+
+## Project Structure
 
 ```
+TrialSense/
+├── backend/
+│   ├── main.py              # FastAPI routes
+│   ├── matching.py          # Pipeline orchestration
+│   ├── criteria.py          # Eligibility → structured rules
+│   ├── scoring.py           # Heuristic + optional LLM scoring
+│   ├── database.py          # SQL pre-filter
+│   ├── patients.py          # Synthea CSV loader
+│   ├── condition_matching.py
+│   ├── ctgov.py             # ClinicalTrials.gov client
+│   ├── nebius_client.py     # Optional LLM client
+│   ├── seed_db.py             # CSV → database
+│   └── schemas.py           # Pydantic API models
+├── frontend/
+│   └── src/
+│       ├── App.jsx
+│       ├── api/trials.js
+│       └── components/
+│           ├── TrialInputForm.jsx
+│           ├── TrialResult.jsx
+│           └── MatchResults.jsx
+├── data/synthea/            # Patient CSVs
+├── main.py                  # Uvicorn entrypoint (repo root)
+└── docker-compose.yml       # Optional PostgreSQL
+```
+
+---
+
+## Run Locally
+
+### Prerequisites
+
+- Python 3.11+
+- Node.js 18+
+
+### 1. Backend
+
+```bash
 cd backend
 pip install -r requirements.txt
+python3 seed_db.py
 uvicorn main:app --reload --port 8000
 ```
 
 Or from the repo root:
 
-```
+```bash
 pip install -r backend/requirements.txt
+cd backend && python3 seed_db.py && cd ..
 uvicorn main:app --reload --port 8000
 ```
 
-If We have changes to the database scheme
-```
-python3 seed_db.py
-```
+Re-run `python3 seed_db.py` after schema changes.
 
-2. Terminal 2 — frontend:
+API docs: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
 
-```
+### 2. Frontend
+
+```bash
 cd frontend
-npm i
+npm install
 npm run dev
 ```
+
+Open [http://localhost:5173](http://localhost:5173). Vite proxies `/api` to the backend on port 8000.
+
+### 3. Environment (optional)
+
+Copy `backend/.env.example` to `backend/.env.local`:
+
+```env
+DB_BACKEND=sqlite
+NEBIUS_API_KEY=your_nebius_api_key_here
+USE_LLM_CRITERIA=false
+USE_LLM_SCORING=false
+```
+
+### 4. PostgreSQL (optional)
+
+```bash
+docker compose up -d
+```
+
+Set in `backend/.env.local`:
+
+```env
+DB_BACKEND=postgresql
+DATABASE_URL=postgresql://trialsense:trialsense@localhost:5432/trialsense
+```
+
+Then seed: `python3 seed_db.py`
+
+---
+
+## API Endpoints
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `GET` | `/health` | Health check |
+| `POST` | `/api/trials/lookup` | Fetch trial by NCT ID or CT.gov URL |
+| `POST` | `/api/trials/match` | Score patients against trial eligibility |
+
+---
+
+## Match Results UI
+
+Each match card shows:
+
+- **Header** — rank, match %, band, patient ID, age, sex, location, care site
+- **Actions** — View details (inclusion + exclusion criteria), Contact PCP
+- **Collapsible** — full patient name, vitals, conditions, medications
+- **Pagination** — 5 matches per page
+
+---
+
+## Data Sources
+
+- **Patients:** Synthea synthetic EHR (`data/synthea/patient_master.csv`, `patient_provider.csv`, `providers_clean.csv`)
+- **Trials:** [ClinicalTrials.gov API v2](https://clinicaltrials.gov/data-api/api)
+
+---
+
+## License
+
+See repository for license details.
