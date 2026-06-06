@@ -1,4 +1,5 @@
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -6,6 +7,16 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { cn } from "@/lib/utils";
 
 function bandVariant(band) {
@@ -22,6 +33,14 @@ function percentColor(percent) {
   if (percent >= 50) return "text-amber-600";
   if (percent > 0) return "text-orange-600";
   return "text-destructive";
+}
+
+function formatPhone(phone) {
+  const digits = String(phone).replace(/\D/g, "");
+  if (digits.length === 10) {
+    return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
+  }
+  return phone;
 }
 
 export default function MatchResults({ results, loading }) {
@@ -52,10 +71,7 @@ export default function MatchResults({ results, loading }) {
     <Card>
       <CardHeader>
         <CardTitle>Ranked patient matches</CardTitle>
-        <CardDescription>
-          HIPAA-masked results only. {prefilter_passed} of {pool_size} patients
-          passed hard-rule pre-filtering
-        </CardDescription>
+        <CardDescription>HIPAA-masked results only.</CardDescription>
       </CardHeader>
       <CardContent className="space-y-3">
         {matches.length === 0 ? (
@@ -85,11 +101,52 @@ export default function MatchResults({ results, loading }) {
                     {match.match_band}
                   </Badge>
                 </div>
-                <div className="space-y-1 text-right text-sm">
+                <div className="space-y-2 text-right text-sm">
                   <p className="font-medium">{match.hospital_name}</p>
-                  <p className="text-muted-foreground">
-                    PCP: {match.pcp_contact}
-                  </p>
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button variant="outline" size="sm">
+                        Contact PCP
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>
+                          Primary care provider
+                        </AlertDialogTitle>
+                        <AlertDialogDescription asChild>
+                          <div className="space-y-2 text-left">
+                            <p>
+                              <span className="font-medium text-foreground">
+                                PCP:
+                              </span>{" "}
+                              {match.pcp_name ?? "PCP unavailable"}
+                            </p>
+                            <p>
+                              <span className="font-medium text-foreground">
+                                Organization:
+                              </span>{" "}
+                              {match.hospital_name ??
+                                "Organization unavailable"}
+                            </p>
+                            <p>
+                              <span className="font-medium text-foreground">
+                                Organization phone:
+                              </span>{" "}
+                              {formatPhone(
+                                match.organization_phone ??
+                                  match.pcp_contact ??
+                                  "Contact unavailable",
+                              )}
+                            </p>
+                          </div>
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogAction>Close</AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
                 </div>
               </div>
               {match.needs_manual_review && (
