@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS patients (
     diastolic_bp REAL,
     cholesterol_mgdl REAL,
     hospital_name TEXT NOT NULL,
+    pcp_name TEXT NOT NULL DEFAULT '',
     pcp_contact TEXT NOT NULL DEFAULT ''
 );
 

@@ -479,12 +479,15 @@ def rank_patients(
                 patient=patient,
                 structured=structured,
             )
+            organization_phone = patient.pcp_contact or "Contact unavailable"
             ranked.append(
                 {
                     "match_percent": percent,
                     "match_band": match_band(percent),
                     "hospital_name": patient.hospital_name,
-                    "pcp_contact": patient.pcp_contact or "Contact unavailable",
+                    "pcp_name": patient.pcp_name or "PCP unavailable",
+                    "organization_phone": organization_phone,
+                    "pcp_contact": organization_phone,
                     "exclusion_reasons": exclusion_reasons,
                     "needs_manual_review": needs_review,
                 }

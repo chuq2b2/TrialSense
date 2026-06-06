@@ -94,6 +94,7 @@ def _row_to_patient(row) -> PatientRecord:
             diastolic_bp=row["diastolic_bp"],
             cholesterol_mgdl=row["cholesterol_mgdl"],
             hospital_name=row["hospital_name"],
+            pcp_name=row["pcp_name"],
             pcp_contact=row["pcp_contact"],
         )
 
@@ -111,6 +112,7 @@ def _row_to_patient(row) -> PatientRecord:
         diastolic_bp=row["diastolic_bp"],
         cholesterol_mgdl=row["cholesterol_mgdl"],
         hospital_name=row["hospital_name"],
+        pcp_name=row["pcp_name"],
         pcp_contact=row["pcp_contact"],
     )
 
@@ -140,12 +142,12 @@ def _select_columns() -> str:
             patient_id, age, gender, active_conditions,
             conditions_json, medications_json,
             bmi, hba1c_pct, glucose_mgdl, systolic_bp, diastolic_bp,
-            cholesterol_mgdl, hospital_name, pcp_contact
+            cholesterol_mgdl, hospital_name, pcp_name, pcp_contact
         """
     return """
         patient_id, age, gender, active_conditions, conditions, medications,
         bmi, hba1c_pct, glucose_mgdl, systolic_bp, diastolic_bp,
-        cholesterol_mgdl, hospital_name, pcp_contact
+        cholesterol_mgdl, hospital_name, pcp_name, pcp_contact
     """
 
 

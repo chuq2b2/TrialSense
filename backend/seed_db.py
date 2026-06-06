@@ -33,6 +33,7 @@ def _patient_rows(patients):
             "diastolic_bp": patient.diastolic_bp,
             "cholesterol_mgdl": patient.cholesterol_mgdl,
             "hospital_name": patient.hospital_name,
+            "pcp_name": patient.pcp_name,
             "pcp_contact": patient.pcp_contact,
         }
 
@@ -47,6 +48,12 @@ def seed_sqlite(patients) -> None:
 
     with sqlite3.connect(SQLITE_PATH) as conn:
         conn.executescript(schema_sql)
+        try:
+            conn.execute(
+                "ALTER TABLE patients ADD COLUMN pcp_name TEXT NOT NULL DEFAULT ''"
+            )
+        except sqlite3.OperationalError:
+            pass
         conn.execute("DELETE FROM patients")
         conn.executemany(
             """
@@ -54,12 +61,12 @@ def seed_sqlite(patients) -> None:
                 patient_id, age, gender, active_conditions,
                 conditions_json, condition_text, medications_json,
                 bmi, hba1c_pct, glucose_mgdl, systolic_bp, diastolic_bp,
-                cholesterol_mgdl, hospital_name, pcp_contact
+                cholesterol_mgdl, hospital_name, pcp_name, pcp_contact
             ) VALUES (
                 :patient_id, :age, :gender, :active_conditions,
                 :conditions_json, :condition_text, :medications_json,
                 :bmi, :hba1c_pct, :glucose_mgdl, :systolic_bp, :diastolic_bp,
-                :cholesterol_mgdl, :hospital_name, :pcp_contact
+                :cholesterol_mgdl, :hospital_name, :pcp_name, :pcp_contact
             )
             """,
             list(_patient_rows(patients)),
@@ -79,13 +86,13 @@ def seed_postgresql(patients) -> None:
                     patient_id, age, gender, active_conditions, conditions,
                     condition_text, medications, bmi, hba1c_pct, glucose_mgdl,
                     systolic_bp, diastolic_bp, cholesterol_mgdl,
-                    hospital_name, pcp_contact
+                    hospital_name, pcp_name, pcp_contact
                 ) VALUES (
                     %(patient_id)s, %(age)s, %(gender)s, %(active_conditions)s,
                     %(conditions)s, %(condition_text)s, %(medications)s,
                     %(bmi)s, %(hba1c_pct)s, %(glucose_mgdl)s,
                     %(systolic_bp)s, %(diastolic_bp)s, %(cholesterol_mgdl)s,
-                    %(hospital_name)s, %(pcp_contact)s
+                    %(hospital_name)s, %(pcp_name)s, %(pcp_contact)s
                 )
                 """,
                 list(_patient_rows(patients)),
