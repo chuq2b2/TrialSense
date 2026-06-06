@@ -32,6 +32,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
 
 const MATCHES_PER_PAGE = 5;
@@ -44,12 +45,35 @@ function bandVariant(band) {
   return "destructive";
 }
 
+function bandBadgeClass(band) {
+  if (band === "Possible match; review manually") {
+    return "border-amber-300 bg-amber-100 text-amber-900";
+  }
+  return "";
+}
+
 function percentColor(percent) {
   if (percent >= 70) return "text-emerald-600";
   if (percent >= 55) return "text-sky-600";
   if (percent >= 35) return "text-amber-600";
   if (percent > 0) return "text-orange-600";
   return "text-destructive";
+}
+
+function heatmapProgressStyles(percent) {
+  if (percent >= 70) {
+    return { track: "bg-emerald-100", indicator: "bg-emerald-600" };
+  }
+  if (percent >= 55) {
+    return { track: "bg-sky-100", indicator: "bg-sky-600" };
+  }
+  if (percent >= 35) {
+    return { track: "bg-amber-100", indicator: "bg-amber-500" };
+  }
+  if (percent > 0) {
+    return { track: "bg-orange-100", indicator: "bg-orange-500" };
+  }
+  return { track: "bg-red-100", indicator: "bg-destructive" };
 }
 
 function statusLabel(status) {
@@ -126,6 +150,93 @@ function formatLocation(patient) {
   return patient?.city || patient?.state || "—";
 }
 
+function criteriaPercent(matched, total) {
+  if (!total) return 0;
+  return Math.round((matched / total) * 100);
+}
+
+function getUnverifiedCriteria(summary) {
+  return (
+    summary?.criteria?.filter((criterion) => criterion.status === "unverified") ??
+    []
+  );
+}
+
+function CriteriaProgressBar({
+  label,
+  matched,
+  total,
+  matchedLabel,
+  unverified = 0,
+}) {
+  const percent = criteriaPercent(matched, total);
+  const heatmap = heatmapProgressStyles(percent);
+
+  return (
+    <div className="space-y-1.5">
+      <div className="flex items-center justify-between gap-2 text-xs">
+        <span className="font-medium text-foreground">{label}</span>
+        <span className="tabular-nums text-muted-foreground">
+          {matchedLabel} {matched}/{total}
+          <span className={cn("ml-1 font-medium", percentColor(percent))}>
+            ({percent}%)
+          </span>
+          {unverified > 0 && (
+            <span className="text-amber-700"> · {unverified} unverified</span>
+          )}
+        </span>
+      </div>
+      <Progress
+        value={percent}
+        className={cn("h-2.5", heatmap.track)}
+        indicatorClassName={heatmap.indicator}
+      />
+    </div>
+  );
+}
+
+function MatchCriteriaProgress({ match }) {
+  const inclusion = match.inclusion_summary ?? {};
+  const exclusion = match.exclusion_summary ?? {};
+
+  return (
+    <div className="w-full space-y-3 border-t px-4 py-3">
+      <CriteriaProgressBar
+        label="Inclusion criteria matched"
+        matched={inclusion.met ?? 0}
+        total={inclusion.total ?? 0}
+        matchedLabel="Matched"
+        unverified={inclusion.unverified ?? 0}
+      />
+      <CriteriaProgressBar
+        label="Exclusion criteria cleared"
+        matched={exclusion.cleared ?? 0}
+        total={exclusion.total ?? 0}
+        matchedLabel="Cleared"
+        unverified={exclusion.unverified ?? 0}
+      />
+    </div>
+  );
+}
+
+function UnverifiedCriteriaSection({ title, criteria }) {
+  if (!criteria.length) return null;
+
+  return (
+    <div className="space-y-2">
+      <p className="text-sm font-medium text-foreground">{title}</p>
+      <ul className="space-y-2 text-xs text-muted-foreground">
+        {criteria.map((criterion) => (
+          <li key={criterion.description} className="rounded-md border p-2">
+            <p className="text-foreground">{criterion.description}</p>
+            {criterion.reason && <p className="mt-1">{criterion.reason}</p>}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
 function formatVitals(patient) {
   const parts = [];
   if (patient?.bmi != null) parts.push(`BMI ${patient.bmi}`);
@@ -158,16 +269,13 @@ function ViewDetailsDialog({ match }) {
                 <p className="text-sm font-medium text-foreground">
                   Inclusion criteria
                 </p>
-                <p className="text-sm text-foreground">
-                  Matched{" "}
-                  <span className="font-semibold">
-                    {match.inclusion_summary?.met ?? 0}
-                  </span>{" "}
-                  of{" "}
-                  <span className="font-semibold">
-                    {match.inclusion_summary?.total ?? 0}
-                  </span>
-                </p>
+                <CriteriaProgressBar
+                  label="Inclusion criteria matched"
+                  matched={match.inclusion_summary?.met ?? 0}
+                  total={match.inclusion_summary?.total ?? 0}
+                  matchedLabel="Matched"
+                  unverified={match.inclusion_summary?.unverified ?? 0}
+                />
                 <CriteriaList
                   criteria={match.inclusion_summary?.criteria}
                   statusLabelFn={statusLabel}
@@ -178,16 +286,13 @@ function ViewDetailsDialog({ match }) {
                 <p className="text-sm font-medium text-foreground">
                   Exclusion criteria
                 </p>
-                <p className="text-sm text-foreground">
-                  Cleared{" "}
-                  <span className="font-semibold">
-                    {match.exclusion_summary?.cleared ?? 0}
-                  </span>{" "}
-                  of{" "}
-                  <span className="font-semibold">
-                    {match.exclusion_summary?.total ?? 0}
-                  </span>
-                </p>
+                <CriteriaProgressBar
+                  label="Exclusion criteria cleared"
+                  matched={match.exclusion_summary?.cleared ?? 0}
+                  total={match.exclusion_summary?.total ?? 0}
+                  matchedLabel="Cleared"
+                  unverified={match.exclusion_summary?.unverified ?? 0}
+                />
                 <CriteriaList
                   criteria={match.exclusion_summary?.criteria}
                   statusLabelFn={exclusionStatusLabel}
@@ -206,6 +311,11 @@ function ViewDetailsDialog({ match }) {
 }
 
 function ContactPcpDialog({ match, patientId }) {
+  const unverifiedInclusion = getUnverifiedCriteria(match.inclusion_summary);
+  const unverifiedExclusion = getUnverifiedCriteria(match.exclusion_summary);
+  const totalUnverified =
+    unverifiedInclusion.length + unverifiedExclusion.length;
+
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
@@ -213,35 +323,53 @@ function ContactPcpDialog({ match, patientId }) {
           Contact PCP
         </Button>
       </AlertDialogTrigger>
-      <AlertDialogContent>
+      <AlertDialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-lg">
         <AlertDialogHeader>
           <AlertDialogTitle>Primary care provider</AlertDialogTitle>
           <AlertDialogDescription asChild>
-            <div className="space-y-2 text-left">
-              <p>
-                <span className="font-medium text-foreground">Patient ID:</span>{" "}
-                {patientId ?? "Unavailable"}
-              </p>
-              <p>
-                <span className="font-medium text-foreground">PCP:</span>{" "}
-                {match.pcp_name ?? "PCP unavailable"}
-              </p>
-              <p>
-                <span className="font-medium text-foreground">
-                  Organization:
-                </span>{" "}
-                {match.hospital_name ?? "Organization unavailable"}
-              </p>
-              <p>
-                <span className="font-medium text-foreground">
-                  Organization phone:
-                </span>{" "}
-                {formatPhone(
-                  match.organization_phone ??
-                    match.pcp_contact ??
-                    "Contact unavailable",
-                )}
-              </p>
+            <div className="space-y-4 text-left">
+              <div className="space-y-2">
+                <p>
+                  <span className="font-medium text-foreground">Patient ID:</span>{" "}
+                  {patientId ?? "Unavailable"}
+                </p>
+                <p>
+                  <span className="font-medium text-foreground">PCP:</span>{" "}
+                  {match.pcp_name ?? "PCP unavailable"}
+                </p>
+                <p>
+                  <span className="font-medium text-foreground">
+                    Organization:
+                  </span>{" "}
+                  {match.hospital_name ?? "Organization unavailable"}
+                </p>
+                <p>
+                  <span className="font-medium text-foreground">
+                    Organization phone:
+                  </span>{" "}
+                  {formatPhone(
+                    match.organization_phone ??
+                      match.pcp_contact ??
+                      "Contact unavailable",
+                  )}
+                </p>
+              </div>
+
+              {totalUnverified > 0 && (
+                <div className="space-y-3 rounded-md border border-amber-200 bg-amber-50/50 p-3">
+                  <p className="text-sm font-medium text-amber-900">
+                    {totalUnverified} unverified criteria — confirm with PCP
+                  </p>
+                  <UnverifiedCriteriaSection
+                    title="Inclusion (unverified)"
+                    criteria={unverifiedInclusion}
+                  />
+                  <UnverifiedCriteriaSection
+                    title="Exclusion (unverified)"
+                    criteria={unverifiedExclusion}
+                  />
+                </div>
+              )}
             </div>
           </AlertDialogDescription>
         </AlertDialogHeader>
@@ -276,9 +404,23 @@ function MatchResultCard({ match, index }) {
               >
                 {match.match_percent}%
               </p>
-              <Badge variant={bandVariant(match.match_band)} className="w-fit">
-                {match.match_band}
-              </Badge>
+              <div className="flex flex-wrap items-center gap-2">
+                <Badge
+                  variant={bandVariant(match.match_band)}
+                  className={cn("w-fit", bandBadgeClass(match.match_band))}
+                >
+                  {match.match_band}
+                </Badge>
+                {match.needs_manual_review &&
+                  match.match_band !== "Possible match; review manually" && (
+                    <Badge
+                      variant="outline"
+                      className="border-amber-300 bg-amber-100 text-amber-900"
+                    >
+                      Verify manually
+                    </Badge>
+                  )}
+              </div>
             </div>
             <div
               className="flex flex-col items-start gap-2"
@@ -315,6 +457,8 @@ function MatchResultCard({ match, index }) {
             </div>
           </dl>
         </div>
+
+        <MatchCriteriaProgress match={match} />
 
         <CollapsibleTrigger className="flex w-full items-center justify-between border-t px-4 py-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted/40 hover:text-foreground">
           Patient clinical details
@@ -368,7 +512,12 @@ function MatchResultCard({ match, index }) {
             )}
 
             {match.needs_manual_review && (
-              <p className="text-xs text-amber-700">Needs manual review</p>
+              <Badge
+                variant="outline"
+                className="border-amber-300 bg-amber-100 text-amber-900"
+              >
+                Verify manually
+              </Badge>
             )}
             {match.exclusion_reasons?.length > 0 && (
               <ul className="list-disc space-y-1 pl-4 text-xs text-destructive">
