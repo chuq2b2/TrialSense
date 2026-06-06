@@ -9,7 +9,7 @@ from condition_matching import (
 )
 from config import NEBIUS_SCORING_MODEL, USE_LLM_SCORING
 from nebius_client import NebiusError, chat_json
-from patients import PatientRecord, patient_to_llm_summary
+from patients import PatientRecord, patient_to_llm_summary, patient_to_match_details
 
 GROUP_WEIGHTS = {
     "hard_exclusion": 5,
@@ -19,11 +19,13 @@ GROUP_WEIGHTS = {
 
 MATCH_BANDS = [
     (90, 100, "Strong match"),
-    (75, 89, "Good match"),
-    (50, 74, "Possible match; review manually"),
+    (70, 89, "Good match"),
+    (50, 69, "Possible match; review manually"),
     (1, 49, "Poor match"),
     (0, 0, "Ineligible or blocked by exclusion"),
 ]
+
+INCLUSION_GROUPS = {"core_inclusion", "soft_preference"}
 
 SCORING_SYSTEM_PROMPT = """You are a clinical trial eligibility scoring engine.
 Score conservatively — only use "1" when clearly met, "0" when clearly not met.
@@ -31,8 +33,12 @@ Use "0.5" for partial evidence and "U" when patient data cannot answer the crite
 Return ONLY valid JSON array, no markdown."""
 
 
-def match_band(score: float) -> str:
+def match_band(score: float, *, blocked_by_exclusion: bool = False) -> str:
+    if blocked_by_exclusion:
+        return "Ineligible or blocked by exclusion"
     rounded = round(score)
+    if rounded == 0:
+        return "Poor match"
     for low, high, label in MATCH_BANDS:
         if low <= rounded <= high:
             return label
@@ -247,22 +253,106 @@ def _score_single_criterion(
     }
 
 
+def _resolve_criterion_entry(
+    criterion: dict,
+    score_map: dict[str, dict],
+    *,
+    patient: PatientRecord | None,
+    structured: dict | None,
+) -> dict | None:
+    entry = score_map.get(criterion["id"])
+    if entry:
+        return entry
+    if patient and structured:
+        return _score_single_criterion(criterion, patient, structured)
+    return None
+
+
+def _criterion_points(score: str) -> float:
+    return {"1": 1.0, "0.5": 0.5}.get(score.upper(), 0.0)
+
+
+def _criterion_status(score: str, assessable: bool) -> str:
+    if not assessable or score.upper() == "U":
+        return "unverified"
+    if score == "1":
+        return "met"
+    if score == "0.5":
+        return "partial"
+    return "unmet"
+
+
+def summarize_inclusion_match(
+    criteria: list[dict],
+    criterion_scores: list[dict],
+    *,
+    patient: PatientRecord | None = None,
+    structured: dict | None = None,
+) -> dict:
+    score_map = {item["criterion_id"]: item for item in criterion_scores}
+    inclusion_criteria = [
+        criterion
+        for criterion in criteria
+        if criterion.get("group") in INCLUSION_GROUPS
+    ]
+
+    details: list[dict] = []
+    counts = {"met": 0, "unmet": 0, "unverified": 0, "partial": 0}
+
+    for criterion in inclusion_criteria:
+        entry = _resolve_criterion_entry(
+            criterion, score_map, patient=patient, structured=structured
+        )
+        score = "U"
+        assessable = False
+        reason = "Insufficient patient data to verify"
+        if entry:
+            score = str(entry.get("score", "U")).upper()
+            assessable = entry.get("assessable", False)
+            reason = entry.get("reason") or reason
+
+        status = _criterion_status(score, assessable)
+        if status == "partial":
+            counts["partial"] += 1
+            counts["met"] += 1
+        else:
+            counts[status] += 1
+
+        details.append(
+            {
+                "description": criterion.get("description", ""),
+                "status": status,
+                "reason": reason,
+            }
+        )
+
+    total = len(inclusion_criteria)
+    return {
+        "total": total,
+        "met": counts["met"],
+        "unmet": counts["unmet"],
+        "unverified": counts["unverified"],
+        "partial": counts["partial"],
+        "criteria": details,
+    }
+
+
 def calculate_match_percent(
     criteria: list[dict],
     criterion_scores: list[dict],
     *,
     patient: PatientRecord | None = None,
     structured: dict | None = None,
-) -> tuple[float, bool, list[str]]:
+) -> tuple[float, bool, list[str], dict]:
     score_map = {item["criterion_id"]: item for item in criterion_scores}
     exclusion_reasons: list[str] = []
 
     for criterion in criteria:
         if criterion.get("group") != "hard_exclusion":
             continue
-        entry = score_map.get(criterion["id"])
-        if not entry and patient and structured:
-            entry = _score_single_criterion(criterion, patient, structured)
+        entry = _resolve_criterion_entry(
+            criterion, score_map, patient=patient, structured=structured
+        )
         if not entry:
             continue
         score = str(entry.get("score", "U")).upper()
@@ -272,58 +362,65 @@ def calculate_match_percent(
                 entry.get("reason") or criterion.get("description", "")
             )
 
+    inclusion_summary = summarize_inclusion_match(
+        criteria,
+        criterion_scores,
+        patient=patient,
+        structured=structured,
+    )
+
     if exclusion_reasons:
-        return 0.0, True, exclusion_reasons
+        return 0.0, True, exclusion_reasons, inclusion_summary
+
+    inclusion_criteria = [
+        criterion
+        for criterion in criteria
+        if criterion.get("group") in INCLUSION_GROUPS
+    ]
+    if not inclusion_criteria:
+        return 0.0, True, [], inclusion_summary
 
     weighted_score = 0.0
-    weighted_assessable = 0.0
+    weighted_total = 0.0
     needs_review = False
-    assessed_count = 0
 
-    for criterion in criteria:
-        entry = score_map.get(criterion["id"])
-        if not entry and patient and structured:
-            entry = _score_single_criterion(criterion, patient, structured)
-
+    for criterion in inclusion_criteria:
+        entry = _resolve_criterion_entry(
+            criterion, score_map, patient=patient, structured=structured
+        )
         weight = criterion.get("weight", GROUP_WEIGHTS.get(criterion.get("group"), 3))
+        weighted_total += weight
 
         if not entry:
-            if patient and structured and _patient_can_assess(
-                criterion.get("assessable_fields", []), patient
-            ):
-                entry = {
-                    "score": "0",
-                    "assessable": True,
-                    "manual_review": True,
-                }
-            else:
-                needs_review = True
-                continue
-
-        score = str(entry.get("score", "U")).upper()
-        assessable = entry.get("assessable", False)
-
-        if score == "U" or not assessable:
             needs_review = True
             continue
 
-        assessed_count += 1
-        if entry.get("manual_review"):
+        score = str(entry.get("score", "U")).upper()
+        assessable = entry.get("assessable", False)
+        if not assessable or score == "U":
+            needs_review = True
+            continue
+
+        if entry.get("manual_review") or score in {"0", "0.5"}:
             needs_review = True
 
-        si = {"1": 1.0, "0.5": 0.5, "0": 0.0}.get(score, 0.0)
-        weighted_score += weight * si
-        weighted_assessable += weight
+        weighted_score += weight * _criterion_points(score)
 
-    if weighted_assessable == 0:
-        return 0.0, True, []
+    if weighted_total == 0:
+        return 0.0, True, [], inclusion_summary
 
-    percent = round(100 * weighted_score / weighted_assessable, 1)
-    if assessed_count < max(1, len(criteria) // 3):
+    raw_percent = 100 * weighted_score / weighted_total
+    verified_ratio = (
+        inclusion_summary["total"] - inclusion_summary["unverified"]
+    ) / inclusion_summary["total"]
+    percent = round(raw_percent * verified_ratio, 1)
+
+    if inclusion_summary["unverified"] > 0:
         needs_review = True
-    if percent < 90 or assessed_count < len(criteria):
+    if inclusion_summary["met"] < inclusion_summary["total"]:
         needs_review = True
-    return percent, needs_review, []
+
+    return percent, needs_review, [], inclusion_summary
 
 
 def _heuristic_scores(
@@ -473,23 +570,31 @@ def rank_patients(
         score_by_ref = {item["ref"]: item for item in batch_scores}
         for patient, ref in zip(batch, refs, strict=True):
             entry = score_by_ref.get(ref, {"criteria_scores": []})
-            percent, needs_review, exclusion_reasons = calculate_match_percent(
-                criteria,
-                entry.get("criteria_scores", []),
-                patient=patient,
-                structured=structured,
+            percent, needs_review, exclusion_reasons, inclusion_summary = (
+                calculate_match_percent(
+                    criteria,
+                    entry.get("criteria_scores", []),
+                    patient=patient,
+                    structured=structured,
+                )
             )
             organization_phone = patient.pcp_contact or "Contact unavailable"
+            patient_details = patient_to_match_details(patient)
             ranked.append(
                 {
+                    "patient_id": patient.patient_id,
+                    "patient": patient_details,
                     "match_percent": percent,
-                    "match_band": match_band(percent),
+                    "match_band": match_band(
+                        percent, blocked_by_exclusion=bool(exclusion_reasons)
+                    ),
                     "hospital_name": patient.hospital_name,
                     "pcp_name": patient.pcp_name or "PCP unavailable",
                     "organization_phone": organization_phone,
                     "pcp_contact": organization_phone,
                     "exclusion_reasons": exclusion_reasons,
                     "needs_manual_review": needs_review,
+                    "inclusion_summary": inclusion_summary,
                 }
             )
 

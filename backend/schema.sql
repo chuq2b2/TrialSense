@@ -1,5 +1,8 @@
 CREATE TABLE IF NOT EXISTS patients (
     patient_id TEXT PRIMARY KEY,
+    full_name TEXT NOT NULL DEFAULT '',
+    city TEXT NOT NULL DEFAULT '',
+    state TEXT NOT NULL DEFAULT '',
     age INTEGER NOT NULL,
     gender TEXT NOT NULL,
     active_conditions INTEGER NOT NULL DEFAULT 0,

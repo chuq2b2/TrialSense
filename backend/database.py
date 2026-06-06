@@ -82,6 +82,9 @@ def _row_to_patient(row) -> PatientRecord:
     if get_backend() == "sqlite":
         return PatientRecord(
             patient_id=row["patient_id"],
+            full_name=row["full_name"],
+            city=row["city"],
+            state=row["state"],
             age=row["age"],
             gender=row["gender"],
             conditions=json.loads(row["conditions_json"] or "[]"),
@@ -100,6 +103,9 @@ def _row_to_patient(row) -> PatientRecord:
 
     return PatientRecord(
         patient_id=row["patient_id"],
+        full_name=row["full_name"],
+        city=row["city"],
+        state=row["state"],
         age=row["age"],
         gender=row["gender"],
         conditions=list(row["conditions"] or []),
@@ -139,15 +145,15 @@ def _fetch_rows(query: str, params: dict) -> list:
 def _select_columns() -> str:
     if get_backend() == "sqlite":
         return """
-            patient_id, age, gender, active_conditions,
+            patient_id, full_name, city, state, age, gender, active_conditions,
             conditions_json, medications_json,
             bmi, hba1c_pct, glucose_mgdl, systolic_bp, diastolic_bp,
             cholesterol_mgdl, hospital_name, pcp_name, pcp_contact
         """
     return """
-        patient_id, age, gender, active_conditions, conditions, medications,
-        bmi, hba1c_pct, glucose_mgdl, systolic_bp, diastolic_bp,
-        cholesterol_mgdl, hospital_name, pcp_name, pcp_contact
+        patient_id, full_name, city, state, age, gender, active_conditions,
+        conditions, medications, bmi, hba1c_pct, glucose_mgdl, systolic_bp,
+        diastolic_bp, cholesterol_mgdl, hospital_name, pcp_name, pcp_contact
     """
 
 

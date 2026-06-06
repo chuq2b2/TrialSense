@@ -18,6 +18,9 @@ def _patient_rows(patients):
     for patient in patients:
         yield {
             "patient_id": patient.patient_id,
+            "full_name": patient.full_name,
+            "city": patient.city,
+            "state": patient.state,
             "age": patient.age,
             "gender": patient.gender,
             "active_conditions": patient.active_conditions,
@@ -48,22 +51,26 @@ def seed_sqlite(patients) -> None:
 
     with sqlite3.connect(SQLITE_PATH) as conn:
         conn.executescript(schema_sql)
-        try:
-            conn.execute(
-                "ALTER TABLE patients ADD COLUMN pcp_name TEXT NOT NULL DEFAULT ''"
-            )
-        except sqlite3.OperationalError:
-            pass
+        for migration in (
+            "ALTER TABLE patients ADD COLUMN pcp_name TEXT NOT NULL DEFAULT ''",
+            "ALTER TABLE patients ADD COLUMN full_name TEXT NOT NULL DEFAULT ''",
+            "ALTER TABLE patients ADD COLUMN city TEXT NOT NULL DEFAULT ''",
+            "ALTER TABLE patients ADD COLUMN state TEXT NOT NULL DEFAULT ''",
+        ):
+            try:
+                conn.execute(migration)
+            except sqlite3.OperationalError:
+                pass
         conn.execute("DELETE FROM patients")
         conn.executemany(
             """
             INSERT INTO patients (
-                patient_id, age, gender, active_conditions,
+                patient_id, full_name, city, state, age, gender, active_conditions,
                 conditions_json, condition_text, medications_json,
                 bmi, hba1c_pct, glucose_mgdl, systolic_bp, diastolic_bp,
                 cholesterol_mgdl, hospital_name, pcp_name, pcp_contact
             ) VALUES (
-                :patient_id, :age, :gender, :active_conditions,
+                :patient_id, :full_name, :city, :state, :age, :gender, :active_conditions,
                 :conditions_json, :condition_text, :medications_json,
                 :bmi, :hba1c_pct, :glucose_mgdl, :systolic_bp, :diastolic_bp,
                 :cholesterol_mgdl, :hospital_name, :pcp_name, :pcp_contact
@@ -83,16 +90,17 @@ def seed_postgresql(patients) -> None:
             cur.executemany(
                 """
                 INSERT INTO patients (
-                    patient_id, age, gender, active_conditions, conditions,
-                    condition_text, medications, bmi, hba1c_pct, glucose_mgdl,
-                    systolic_bp, diastolic_bp, cholesterol_mgdl,
-                    hospital_name, pcp_name, pcp_contact
+                    patient_id, full_name, city, state, age, gender,
+                    active_conditions, conditions, condition_text, medications,
+                    bmi, hba1c_pct, glucose_mgdl, systolic_bp, diastolic_bp,
+                    cholesterol_mgdl, hospital_name, pcp_name, pcp_contact
                 ) VALUES (
-                    %(patient_id)s, %(age)s, %(gender)s, %(active_conditions)s,
-                    %(conditions)s, %(condition_text)s, %(medications)s,
-                    %(bmi)s, %(hba1c_pct)s, %(glucose_mgdl)s,
-                    %(systolic_bp)s, %(diastolic_bp)s, %(cholesterol_mgdl)s,
-                    %(hospital_name)s, %(pcp_name)s, %(pcp_contact)s
+                    %(patient_id)s, %(full_name)s, %(city)s, %(state)s,
+                    %(age)s, %(gender)s, %(active_conditions)s, %(conditions)s,
+                    %(condition_text)s, %(medications)s, %(bmi)s, %(hba1c_pct)s,
+                    %(glucose_mgdl)s, %(systolic_bp)s, %(diastolic_bp)s,
+                    %(cholesterol_mgdl)s, %(hospital_name)s, %(pcp_name)s,
+                    %(pcp_contact)s
                 )
                 """,
                 list(_patient_rows(patients)),

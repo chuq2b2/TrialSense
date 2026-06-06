@@ -9,6 +9,9 @@ from config import DATA_DIR
 @dataclass
 class PatientRecord:
     patient_id: str
+    full_name: str
+    city: str
+    state: str
     age: int
     gender: str
     conditions: list[str]
@@ -99,6 +102,9 @@ def load_patients() -> list[PatientRecord]:
             patients.append(
                 PatientRecord(
                     patient_id=patient_id,
+                    full_name=row.get("FULL_NAME", "").strip() or "Unknown patient",
+                    city=row.get("CITY", "").strip(),
+                    state=row.get("STATE", "").strip(),
                     age=_parse_int(row.get("AGE", "0")),
                     gender=_normalize_gender(row.get("GENDER", "")),
                     conditions=_split_pipe_list(row.get("CONDITION_LIST", "")),
@@ -117,6 +123,26 @@ def load_patients() -> list[PatientRecord]:
             )
 
     return patients
+
+
+def patient_to_match_details(patient: PatientRecord) -> dict:
+    return {
+        "patient_id": patient.patient_id,
+        "full_name": patient.full_name,
+        "age": patient.age,
+        "gender": patient.gender,
+        "city": patient.city,
+        "state": patient.state,
+        "active_conditions": patient.active_conditions,
+        "conditions": patient.conditions,
+        "medications": patient.medications,
+        "bmi": patient.bmi,
+        "hba1c_pct": patient.hba1c_pct,
+        "glucose_mgdl": patient.glucose_mgdl,
+        "systolic_bp": patient.systolic_bp,
+        "diastolic_bp": patient.diastolic_bp,
+        "cholesterol_mgdl": patient.cholesterol_mgdl,
+    }
 
 
 def patient_to_llm_summary(patient: PatientRecord, ref: str) -> dict:
