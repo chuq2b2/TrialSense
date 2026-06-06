@@ -1,5 +1,6 @@
 <img width="500" height="auto" alt="logo" src="https://github.com/user-attachments/assets/59c13c22-a12c-4d8d-a282-d24e0fc75909" />
 
+Live DEMO: https://trial-sense.vercel.app/
 
 # TrialSense
 
