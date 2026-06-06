@@ -17,6 +17,11 @@ pip install -r backend/requirements.txt
 uvicorn main:app --reload --port 8000
 ```
 
+If We have changes to the database scheme
+```
+python3 seed_db.py
+```
+
 2. Terminal 2 — frontend:
 
 ```
