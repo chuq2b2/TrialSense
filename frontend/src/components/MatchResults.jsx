@@ -126,21 +126,135 @@ export default function MatchResults({ results, loading }) {
                 className="rounded-lg border p-4"
               >
                 <div className="flex flex-wrap items-start justify-between gap-4">
-                  <div className="space-y-1">
-                    <p className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
-                      Rank #{index + 1}
-                    </p>
-                    <p
-                      className={cn(
-                        "text-2xl font-semibold tabular-nums",
-                        percentColor(match.match_percent),
-                      )}
-                    >
-                      {match.match_percent}%
-                    </p>
-                    <Badge variant={bandVariant(match.match_band)}>
-                      {match.match_band}
-                    </Badge>
+                  <div className="flex flex-col gap-3">
+                    <div className="space-y-1">
+                      <p className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
+                        Rank #{index + 1}
+                      </p>
+                      <p
+                        className={cn(
+                          "text-2xl font-semibold tabular-nums",
+                          percentColor(match.match_percent),
+                        )}
+                      >
+                        {match.match_percent}%
+                      </p>
+                      <Badge
+                        variant={bandVariant(match.match_band)}
+                        className="w-fit"
+                      >
+                        {match.match_band}
+                      </Badge>
+                    </div>
+                    <div className="flex flex-col items-start gap-2">
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button variant="outline" size="sm" className="w-full sm:w-auto">
+                          View details
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-lg">
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Match details</AlertDialogTitle>
+                          <AlertDialogDescription asChild>
+                            <div className="space-y-4 text-left">
+                              <p className="text-sm text-foreground">
+                                Matched{" "}
+                                <span className="font-semibold">
+                                  {match.inclusion_summary?.met ?? 0}
+                                </span>{" "}
+                                of{" "}
+                                <span className="font-semibold">
+                                  {match.inclusion_summary?.total ?? 0}
+                                </span>{" "}
+                                inclusion criteria
+                              </p>
+                              <ul className="space-y-3">
+                                {match.inclusion_summary?.criteria?.map(
+                                  (criterion) => (
+                                    <li
+                                      key={criterion.description}
+                                      className="rounded-md border p-3"
+                                    >
+                                      <p className="text-sm font-medium text-foreground">
+                                        {criterion.description}
+                                      </p>
+                                      <p
+                                        className={cn(
+                                          "mt-1 text-xs font-medium",
+                                          statusClass(criterion.status),
+                                        )}
+                                      >
+                                        {statusLabel(criterion.status)}
+                                      </p>
+                                      {criterion.reason && (
+                                        <p className="mt-1 text-xs text-muted-foreground">
+                                          {criterion.reason}
+                                        </p>
+                                      )}
+                                    </li>
+                                  ),
+                                )}
+                              </ul>
+                            </div>
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogAction>Close</AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button variant="outline" size="sm" className="w-full sm:w-auto">
+                          Contact PCP
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>
+                            Primary care provider
+                          </AlertDialogTitle>
+                          <AlertDialogDescription asChild>
+                            <div className="space-y-2 text-left">
+                              <p>
+                                <span className="font-medium text-foreground">
+                                  Patient ID:
+                                </span>{" "}
+                                {patientId ?? "Unavailable"}
+                              </p>
+                              <p>
+                                <span className="font-medium text-foreground">
+                                  PCP:
+                                </span>{" "}
+                                {match.pcp_name ?? "PCP unavailable"}
+                              </p>
+                              <p>
+                                <span className="font-medium text-foreground">
+                                  Organization:
+                                </span>{" "}
+                                {match.hospital_name ??
+                                  "Organization unavailable"}
+                              </p>
+                              <p>
+                                <span className="font-medium text-foreground">
+                                  Organization phone:
+                                </span>{" "}
+                                {formatPhone(
+                                  match.organization_phone ??
+                                    match.pcp_contact ??
+                                    "Contact unavailable",
+                                )}
+                              </p>
+                            </div>
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogAction>Close</AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                    </div>
                   </div>
 
                   <div className="min-w-0 flex-1 space-y-3 text-sm">
@@ -224,115 +338,6 @@ export default function MatchResults({ results, loading }) {
                     </dl>
                   </div>
 
-                  <div className="flex flex-wrap justify-end gap-2">
-                    <AlertDialog>
-                      <AlertDialogTrigger asChild>
-                        <Button variant="outline" size="sm">
-                          View details
-                        </Button>
-                      </AlertDialogTrigger>
-                      <AlertDialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-lg">
-                        <AlertDialogHeader>
-                          <AlertDialogTitle>Match details</AlertDialogTitle>
-                          <AlertDialogDescription asChild>
-                            <div className="space-y-4 text-left">
-                              <p className="text-sm text-foreground">
-                                Matched{" "}
-                                <span className="font-semibold">
-                                  {match.inclusion_summary?.met ?? 0}
-                                </span>{" "}
-                                of{" "}
-                                <span className="font-semibold">
-                                  {match.inclusion_summary?.total ?? 0}
-                                </span>{" "}
-                                inclusion criteria
-                              </p>
-                              <ul className="space-y-3">
-                                {match.inclusion_summary?.criteria?.map(
-                                  (criterion) => (
-                                    <li
-                                      key={criterion.description}
-                                      className="rounded-md border p-3"
-                                    >
-                                      <p className="text-sm font-medium text-foreground">
-                                        {criterion.description}
-                                      </p>
-                                      <p
-                                        className={cn(
-                                          "mt-1 text-xs font-medium",
-                                          statusClass(criterion.status),
-                                        )}
-                                      >
-                                        {statusLabel(criterion.status)}
-                                      </p>
-                                      {criterion.reason && (
-                                        <p className="mt-1 text-xs text-muted-foreground">
-                                          {criterion.reason}
-                                        </p>
-                                      )}
-                                    </li>
-                                  ),
-                                )}
-                              </ul>
-                            </div>
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                          <AlertDialogAction>Close</AlertDialogAction>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
-                    <AlertDialog>
-                      <AlertDialogTrigger asChild>
-                        <Button variant="outline" size="sm">
-                          Contact PCP
-                        </Button>
-                      </AlertDialogTrigger>
-                      <AlertDialogContent>
-                        <AlertDialogHeader>
-                          <AlertDialogTitle>
-                            Primary care provider
-                          </AlertDialogTitle>
-                          <AlertDialogDescription asChild>
-                            <div className="space-y-2 text-left">
-                              <p>
-                                <span className="font-medium text-foreground">
-                                  Patient ID:
-                                </span>{" "}
-                                {patientId ?? "Unavailable"}
-                              </p>
-                              <p>
-                                <span className="font-medium text-foreground">
-                                  PCP:
-                                </span>{" "}
-                                {match.pcp_name ?? "PCP unavailable"}
-                              </p>
-                              <p>
-                                <span className="font-medium text-foreground">
-                                  Organization:
-                                </span>{" "}
-                                {match.hospital_name ??
-                                  "Organization unavailable"}
-                              </p>
-                              <p>
-                                <span className="font-medium text-foreground">
-                                  Organization phone:
-                                </span>{" "}
-                                {formatPhone(
-                                  match.organization_phone ??
-                                    match.pcp_contact ??
-                                    "Contact unavailable",
-                                )}
-                              </p>
-                            </div>
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                          <AlertDialogAction>Close</AlertDialogAction>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
-                  </div>
                 </div>
                 {match.needs_manual_review && (
                   <p className="mt-3 text-xs text-amber-700">
