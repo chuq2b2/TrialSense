@@ -49,6 +49,54 @@ function statusClass(status) {
   return "text-muted-foreground";
 }
 
+function exclusionStatusLabel(status) {
+  if (status === "cleared") return "Cleared";
+  if (status === "triggered") return "Excluded";
+  return "Unverified";
+}
+
+function exclusionStatusClass(status) {
+  if (status === "cleared") return "text-emerald-700";
+  if (status === "triggered") return "text-destructive";
+  return "text-muted-foreground";
+}
+
+function CriteriaList({ criteria, statusLabelFn, statusClassFn }) {
+  if (!criteria?.length) {
+    return (
+      <p className="text-sm text-muted-foreground">No criteria to display.</p>
+    );
+  }
+
+  return (
+    <ul className="space-y-3">
+      {criteria.map((criterion) => (
+        <li
+          key={criterion.description}
+          className="rounded-md border p-3"
+        >
+          <p className="text-sm font-medium text-foreground">
+            {criterion.description}
+          </p>
+          <p
+            className={cn(
+              "mt-1 text-xs font-medium",
+              statusClassFn(criterion.status),
+            )}
+          >
+            {statusLabelFn(criterion.status)}
+          </p>
+          {criterion.reason && (
+            <p className="mt-1 text-xs text-muted-foreground">
+              {criterion.reason}
+            </p>
+          )}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 function formatPhone(phone) {
   const digits = String(phone).replace(/\D/g, "");
   if (digits.length === 10) {
@@ -157,45 +205,47 @@ export default function MatchResults({ results, loading }) {
                         <AlertDialogHeader>
                           <AlertDialogTitle>Match details</AlertDialogTitle>
                           <AlertDialogDescription asChild>
-                            <div className="space-y-4 text-left">
-                              <p className="text-sm text-foreground">
-                                Matched{" "}
-                                <span className="font-semibold">
-                                  {match.inclusion_summary?.met ?? 0}
-                                </span>{" "}
-                                of{" "}
-                                <span className="font-semibold">
-                                  {match.inclusion_summary?.total ?? 0}
-                                </span>{" "}
-                                inclusion criteria
-                              </p>
-                              <ul className="space-y-3">
-                                {match.inclusion_summary?.criteria?.map(
-                                  (criterion) => (
-                                    <li
-                                      key={criterion.description}
-                                      className="rounded-md border p-3"
-                                    >
-                                      <p className="text-sm font-medium text-foreground">
-                                        {criterion.description}
-                                      </p>
-                                      <p
-                                        className={cn(
-                                          "mt-1 text-xs font-medium",
-                                          statusClass(criterion.status),
-                                        )}
-                                      >
-                                        {statusLabel(criterion.status)}
-                                      </p>
-                                      {criterion.reason && (
-                                        <p className="mt-1 text-xs text-muted-foreground">
-                                          {criterion.reason}
-                                        </p>
-                                      )}
-                                    </li>
-                                  ),
-                                )}
-                              </ul>
+                            <div className="space-y-6 text-left">
+                              <section className="space-y-3">
+                                <p className="text-sm font-medium text-foreground">
+                                  Inclusion criteria
+                                </p>
+                                <p className="text-sm text-foreground">
+                                  Matched{" "}
+                                  <span className="font-semibold">
+                                    {match.inclusion_summary?.met ?? 0}
+                                  </span>{" "}
+                                  of{" "}
+                                  <span className="font-semibold">
+                                    {match.inclusion_summary?.total ?? 0}
+                                  </span>
+                                </p>
+                                <CriteriaList
+                                  criteria={match.inclusion_summary?.criteria}
+                                  statusLabelFn={statusLabel}
+                                  statusClassFn={statusClass}
+                                />
+                              </section>
+                              <section className="space-y-3">
+                                <p className="text-sm font-medium text-foreground">
+                                  Exclusion criteria
+                                </p>
+                                <p className="text-sm text-foreground">
+                                  Cleared{" "}
+                                  <span className="font-semibold">
+                                    {match.exclusion_summary?.cleared ?? 0}
+                                  </span>{" "}
+                                  of{" "}
+                                  <span className="font-semibold">
+                                    {match.exclusion_summary?.total ?? 0}
+                                  </span>
+                                </p>
+                                <CriteriaList
+                                  criteria={match.exclusion_summary?.criteria}
+                                  statusLabelFn={exclusionStatusLabel}
+                                  statusClassFn={exclusionStatusClass}
+                                />
+                              </section>
                             </div>
                           </AlertDialogDescription>
                         </AlertDialogHeader>
