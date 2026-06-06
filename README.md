@@ -226,6 +226,65 @@ Each match card shows:
 
 ---
 
+## Deploy on Vercel
+
+TrialSense deploys as a **single Vercel project**: Vite frontend (static) + FastAPI backend (Python serverless function).
+
+### Prerequisites
+
+- [Vercel account](https://vercel.com)
+- [Vercel CLI](https://vercel.com/docs/cli) (optional): `npm i -g vercel`
+
+### Deploy
+
+1. Push the repo to GitHub (if not already).
+
+2. Import the project in [Vercel Dashboard](https://vercel.com/new):
+   - **Root directory:** repository root (not `frontend/`)
+   - Vercel reads `vercel.json` automatically.
+
+3. Or deploy from the CLI:
+
+```bash
+cd /path/to/TrialSense
+vercel
+```
+
+4. For production:
+
+```bash
+vercel --prod
+```
+
+### What happens on deploy
+
+- Installs frontend + Python dependencies
+- Runs `python backend/seed_db.py` (builds SQLite from Synthea CSVs)
+- Builds `frontend/dist`
+- Serves the React app and routes `/api/*` to `api/index.py` (FastAPI)
+
+### Environment variables (Vercel project settings)
+
+Optional — only if you enable LLM scoring:
+
+| Variable | Value |
+|----------|-------|
+| `USE_LLM_CRITERIA` | `true` |
+| `USE_LLM_SCORING` | `true` |
+| `NEBIUS_API_KEY` | your key |
+| `NEBIUS_BASE_URL` | `https://api.tokenfactory.nebius.com/v1` |
+
+For PostgreSQL instead of SQLite, set `DB_BACKEND=postgresql` and `DATABASE_URL` (e.g. Neon, Supabase, or Vercel Postgres).
+
+### Notes
+
+- **Same-origin API:** Production uses `/api` relative URLs — no separate backend URL needed.
+- **Serverless timeout:** Hobby plan = 10s per request; Pro allows up to 60s (`maxDuration` in `vercel.json`).
+- **SQLite:** Re-seeded on each deploy; patient data is read-only at runtime.
+- **Local dev** is unchanged — run backend + `npm run dev` separately.
+
+---
+
 ## License
 
 See repository for license details.

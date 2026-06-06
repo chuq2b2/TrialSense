@@ -1,0 +1,7 @@
+backend/.env
+backend/.env.local
+frontend/.env
+.git
+**/__pycache__
+**/*.pyc
+terminals
