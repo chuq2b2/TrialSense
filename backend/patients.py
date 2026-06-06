@@ -21,6 +21,7 @@ class PatientRecord:
     diastolic_bp: float | None
     cholesterol_mgdl: float | None
     hospital_name: str
+    pcp_name: str
     pcp_contact: str
 
 
@@ -75,6 +76,7 @@ def _load_provider_contacts() -> dict[str, dict[str, str]]:
                 continue
             contacts[patient_id] = {
                 "hospital_name": row.get("ORGANIZATION_NAME", "Unknown hospital"),
+                "pcp_name": row.get("PROVIDER_NAME", ""),
                 "pcp_contact": provider_phones.get(row.get("PROVIDER_ID", ""), ""),
             }
 
@@ -92,7 +94,7 @@ def load_patients() -> list[PatientRecord]:
             patient_id = row["PATIENT_ID"]
             contact = contacts.get(
                 patient_id,
-                {"hospital_name": "Unknown hospital", "pcp_contact": ""},
+                {"hospital_name": "Unknown hospital", "pcp_name": "", "pcp_contact": ""},
             )
             patients.append(
                 PatientRecord(
@@ -109,6 +111,7 @@ def load_patients() -> list[PatientRecord]:
                     diastolic_bp=_parse_float(row.get("DIASTOLIC_BP")),
                     cholesterol_mgdl=_parse_float(row.get("CHOLESTEROL_MGDL")),
                     hospital_name=contact["hospital_name"],
+                    pcp_name=contact["pcp_name"],
                     pcp_contact=contact["pcp_contact"],
                 )
             )

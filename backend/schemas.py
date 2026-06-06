@@ -33,6 +33,8 @@ class MaskedPatientMatch(BaseModel):
     match_percent: float
     match_band: str
     hospital_name: str
+    pcp_name: str
+    organization_phone: str
     pcp_contact: str
     exclusion_reasons: list[str] = []
     needs_manual_review: bool = False
