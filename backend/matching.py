@@ -11,7 +11,7 @@ from patients import load_patients
 from prefilter import apply_sql_prefilters
 from scoring import rank_patients
 
-MAX_SCORING_POOL = 10
+MAX_SCORING_POOL = 50
 
 
 def _prioritize_patients(patients: list, structured: dict) -> list:
