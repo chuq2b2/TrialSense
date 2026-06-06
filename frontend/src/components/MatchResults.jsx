@@ -328,11 +328,6 @@ function MatchResultCard({ match, index }) {
 
         <CollapsibleContent>
           <div className="space-y-4 border-t px-4 py-4 text-sm">
-            <div>
-              <p className="text-xs text-muted-foreground">Patient name</p>
-              <p className="font-medium">{patient.full_name ?? "Unknown patient"}</p>
-            </div>
-
             <dl className="grid gap-3 sm:grid-cols-2">
               <div>
                 <dt className="text-xs text-muted-foreground">
