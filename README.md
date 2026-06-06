@@ -1,3 +1,6 @@
+<img width="500" height="auto" alt="logo" src="https://github.com/user-attachments/assets/59c13c22-a12c-4d8d-a282-d24e0fc75909" />
+
+
 # TrialSense
 
 TrialSense helps clinical trial coordinators find and rank eligible patients for a study. Enter an NCT ID or ClinicalTrials.gov URL, and the app fetches trial eligibility, scores synthetic patients against inclusion/exclusion criteria, and returns a ranked list with match details and PCP contact information.
